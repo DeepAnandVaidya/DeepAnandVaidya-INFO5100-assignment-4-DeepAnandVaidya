@@ -7,6 +7,7 @@ package ui;
 
 import java.awt.Font;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class ParentPanel extends javax.swing.JPanel {
     PersonDirectory people;
     PatientDirectory patientDir;
     EncounterHistory encounterHistory;
+    int id;
 
     /**
      * Creates new form ParentPanel
@@ -39,6 +41,9 @@ public class ParentPanel extends javax.swing.JPanel {
         this.people = people;
         this.patientDir = patientDir;
         this.encounterHistory = encounterHistory;
+
+        btnPreviousReports.setVisible(false);
+        pnlTable.setVisible(false);
 
         // Populate the JTable
         if (this.people != null) {
@@ -103,6 +108,10 @@ public class ParentPanel extends javax.swing.JPanel {
         txtId = new javax.swing.JTextField();
         lblName = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
+        btnPreviousReports = new javax.swing.JButton();
+        pnlTable = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblPreviousReports = new javax.swing.JTable();
 
         jLayeredPane1.setLayout(new java.awt.CardLayout());
 
@@ -418,37 +427,88 @@ public class ParentPanel extends javax.swing.JPanel {
         txtName.setEditable(false);
         txtName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
+        btnPreviousReports.setBackground(new java.awt.Color(255, 204, 102));
+        btnPreviousReports.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnPreviousReports.setForeground(new java.awt.Color(204, 102, 0));
+        btnPreviousReports.setText("PREVIOUS REPORTS");
+        btnPreviousReports.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPreviousReports.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPreviousReportsActionPerformed(evt);
+            }
+        });
+
+        pnlTable.setBackground(new java.awt.Color(239, 232, 232));
+
+        tblPreviousReports.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        tblPreviousReports.setForeground(new java.awt.Color(0, 0, 0));
+        tblPreviousReports.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "DATE/TIME"
+            }
+        ));
+        tblPreviousReports.setSelectionBackground(new java.awt.Color(255, 204, 204));
+        jScrollPane2.setViewportView(tblPreviousReports);
+
+        javax.swing.GroupLayout pnlTableLayout = new javax.swing.GroupLayout(pnlTable);
+        pnlTable.setLayout(pnlTableLayout);
+        pnlTableLayout.setHorizontalGroup(
+            pnlTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 257, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+        pnlTableLayout.setVerticalGroup(
+            pnlTableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTableLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout AddVitalsPanelLayout = new javax.swing.GroupLayout(AddVitalsPanel);
         AddVitalsPanel.setLayout(AddVitalsPanelLayout);
         AddVitalsPanelLayout.setHorizontalGroup(
             AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblBorder8, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+            .addComponent(lblBorder8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(lblBorder7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(AddVitalsPanelLayout.createSequentialGroup()
-                .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnSaveVitals, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(AddVitalsPanelLayout.createSequentialGroup()
-                            .addGap(199, 199, 199)
-                            .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblTemperature, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblPressure, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblPulse, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblId, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblName, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addGap(18, 18, 18)
-                            .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtPressure, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtPulse, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(AddVitalsPanelLayout.createSequentialGroup()
-                            .addGap(20, 20, 20)
-                            .addComponent(jButton5)
-                            .addGap(117, 117, 117)
-                            .addComponent(lblHeader3, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(AddVitalsPanelLayout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(AddVitalsPanelLayout.createSequentialGroup()
+                                .addComponent(jButton5)
+                                .addGap(117, 117, 117)
+                                .addComponent(lblHeader3, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnPreviousReports)))
+                    .addGroup(AddVitalsPanelLayout.createSequentialGroup()
+                        .addGap(189, 189, 189)
+                        .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSaveVitals, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(AddVitalsPanelLayout.createSequentialGroup()
+                                .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTemperature, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblPressure, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblPulse, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblId, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblName, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGap(18, 18, 18)
+                                .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPressure, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPulse, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(120, 216, Short.MAX_VALUE))
         );
         AddVitalsPanelLayout.setVerticalGroup(
             AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -461,7 +521,9 @@ public class ParentPanel extends javax.swing.JPanel {
                     .addGroup(AddVitalsPanelLayout.createSequentialGroup()
                         .addGap(43, 43, 43)
                         .addComponent(jButton5)))
-                .addGap(109, 109, 109)
+                .addGap(18, 18, 18)
+                .addComponent(btnPreviousReports)
+                .addGap(31, 31, 31)
                 .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblName))
@@ -483,7 +545,9 @@ public class ParentPanel extends javax.swing.JPanel {
                     .addComponent(txtPulse, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(47, 47, 47)
                 .addComponent(btnSaveVitals)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 199, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
                 .addComponent(lblBorder8, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -507,8 +571,8 @@ public class ParentPanel extends javax.swing.JPanel {
 
     /**
      * Save the person profile details
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
         Person person = people.addPeople();
@@ -537,15 +601,15 @@ public class ParentPanel extends javax.swing.JPanel {
         jLayeredPane1.add(ViewAllProfilePanel);
         jLayeredPane1.revalidate();
         jLayeredPane1.repaint();
-        
+
         // Populate the table
         populateTable();
     }//GEN-LAST:event_btnSaveProfileActionPerformed
 
     /**
      * Create Profile button click, switch the card layout to the creation panel
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     private void btnCreateProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateProfileActionPerformed
         jLayeredPane1.removeAll();
@@ -568,6 +632,11 @@ public class ParentPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Please select a row first");
             return;
         } else {
+            // Style the JTable header
+            JTableHeader tableHeader = tblPreviousReports.getTableHeader();
+            tableHeader.setFont(new Font("Segoe UI", Font.BOLD, 12));
+            ((DefaultTableCellRenderer) tableHeader.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
+
             jLayeredPane1.removeAll();
             jLayeredPane1.add(AddVitalsPanel);
             jLayeredPane1.revalidate();
@@ -576,7 +645,13 @@ public class ParentPanel extends javax.swing.JPanel {
             Person selectedPerson = (Person) model.getValueAt(selectedRowIndex, 0);
             VitalSigns vitalSigns = new VitalSigns(selectedPerson.getId(), selectedPerson.getFirstName(), selectedPerson.getLastName());
             txtId.setText(String.valueOf(vitalSigns.getId()));
+            id = vitalSigns.getId();
             txtName.setText(vitalSigns.getFullName());
+
+            // if the person is a patient already, display previous reports
+            if (selectedPerson.isIsPatient()) {
+                btnPreviousReports.setVisible(true);
+            }
         }
     }//GEN-LAST:event_btnAddVitalsActionPerformed
 
@@ -593,15 +668,17 @@ public class ParentPanel extends javax.swing.JPanel {
         vitalSigns.setBloodPressure(Integer.parseInt(txtPressure.getText()));
         vitalSigns.setPulse(Integer.parseInt(txtPulse.getText()));
         selectedPerson.updateAsAPatient(selectedPerson.getId(), people);
-        
+
         Calendar calendar = Calendar.getInstance();
         vitalSigns.setDate(calendar.getTime());
-        
+
         Patient patient = patientDir.addPatients();
         patient.setPerson(selectedPerson);
-        
+
         Encounter encounter = encounterHistory.addEncounter();
         encounter.setVitalSigns(vitalSigns);
+        patient.setEncounterHistory(encounterHistory);
+        System.out.println(encounterHistory.getEncounterHistory().size());
 
         JOptionPane.showMessageDialog(this, "Vitals added for ID: " + selectedPerson.getId());
         txtName.setText("");
@@ -609,6 +686,7 @@ public class ParentPanel extends javax.swing.JPanel {
         txtTemperature.setText("");
         txtPressure.setText("");
         txtPulse.setText("");
+        pnlTable.setVisible(false);
         jLayeredPane1.removeAll();
         jLayeredPane1.add(ViewAllProfilePanel);
         jLayeredPane1.revalidate();
@@ -623,6 +701,12 @@ public class ParentPanel extends javax.swing.JPanel {
         jLayeredPane1.repaint();
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void btnPreviousReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPreviousReportsActionPerformed
+        pnlTable.setVisible(true);
+        Patient patient = returnPatientObject(id);
+        populatePreviousReports(patient);
+    }//GEN-LAST:event_btnPreviousReportsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AddVitalsPanel;
@@ -630,12 +714,14 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JPanel ViewAllProfilePanel;
     private javax.swing.JButton btnAddVitals;
     private javax.swing.JButton btnCreateProfile;
+    private javax.swing.JButton btnPreviousReports;
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnSaveVitals;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblAge;
     private javax.swing.JLabel lblBorder1;
     private javax.swing.JLabel lblBorder2;
@@ -656,7 +742,9 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblPressure;
     private javax.swing.JLabel lblPulse;
     private javax.swing.JLabel lblTemperature;
+    private javax.swing.JPanel pnlTable;
     private javax.swing.JTable tblDashboard;
+    private javax.swing.JTable tblPreviousReports;
     private javax.swing.JTextField txtAge;
     private javax.swing.JTextField txtCity;
     private javax.swing.JTextField txtCommunity;
@@ -670,6 +758,10 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtTemperature;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Populate JTable
+     *
+     */
     private void populateTable() {
         DefaultTableModel model = (DefaultTableModel) tblDashboard.getModel();
         model.setRowCount(0);
@@ -697,14 +789,45 @@ public class ParentPanel extends javax.swing.JPanel {
     public PersonDirectory returnPersonDirectory() {
         return people;
     }
-    
+
     // Return Patient Directory list
     public PatientDirectory returnPatientDirectory() {
         return patientDir;
     }
-    
+
     // Return Encounter History list
     public EncounterHistory returnEncounterHistory() {
         return encounterHistory;
+    }
+
+    /**
+     * Populate encounter history
+     *
+     */
+    private void populatePreviousReports(Patient patient) {
+        DefaultTableModel model = (DefaultTableModel) tblPreviousReports.getModel();
+        model.setRowCount(0);
+
+        for (Encounter enounter : patient.getEncounterHistory().getEncounterHistory()) {
+            Object[] row = new Object[1];
+            row[0] = enounter.getVitalSigns().getDate();
+            model.addRow(row);
+        }
+    }
+
+    /**
+     * Return a patient object whose id matches
+     *
+     * @param id
+     * @return
+     */
+    private Patient returnPatientObject(int id) {
+        Patient newPatient = new Patient();
+        for (Patient patient : patientDir.getPatientList()) {
+            if (patient.getPerson().getId() == id) {
+                newPatient = patient;
+            }
+        }
+        return newPatient;
     }
 }
