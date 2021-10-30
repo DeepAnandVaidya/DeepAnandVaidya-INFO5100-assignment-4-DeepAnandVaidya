@@ -6,6 +6,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -13,22 +14,8 @@ import java.util.ArrayList;
  */
 public class Community {
 
-    private ArrayList<House> houses;
     private String city;
-
-    public Community() {
-        if (this.houses == null || this.houses.isEmpty()) {
-            this.houses = new ArrayList<>();
-        }
-    }
-
-    public ArrayList<House> getHouses() {
-        return houses;
-    }
-
-    public void setHouses(ArrayList<House> houses) {
-        this.houses = houses;
-    }
+    private HashMap<String, ArrayList<House>> communityMap;
 
     public String getCity() {
         return city;
@@ -38,10 +25,11 @@ public class Community {
         this.city = city;
     }
 
-    public void addhouse(House house) {
-        houses.add(house);
-        City city = new City();
-        city.addCommunity(this);
+    public HashMap<String, ArrayList<House>> getCommunityMap() {
+        return communityMap;
     }
 
+    public void setCommunityMap(HashMap<String, ArrayList<House>> communityMap) {
+        this.communityMap = communityMap;
+    }
 }

@@ -54,22 +54,32 @@ public class ParentPanel extends javax.swing.JPanel {
     HashMap encounterHistoryMap;
     ArrayList<Encounter> encounterArrayList = new ArrayList<>();
     List<Person> peopleInTheHouseList = new ArrayList<>();
+    List<House> allHouses;
+    List<Community> allCommunities;
+    List<House> housesOfACommunity = new ArrayList<>();
+    List<Community> communitiesOfACity = new ArrayList<>();
     String isPatient;
     City city;
     ArrayList<Community> community;
     HashMap houseMap;
+    HashMap communityMap;
+    HashMap cityMap;
     House house;
+    Community community1;
 
     /**
      * Creates new form ParentPanel
      */
-    public ParentPanel(PersonDirectory people, PatientDirectory patientDir, EncounterHistory encounterHistory, House house) {
+    public ParentPanel(PersonDirectory people, PatientDirectory patientDir, EncounterHistory encounterHistory, House house, Community communities, City city) {
         initComponents();
         this.people = people;
         this.patientDir = patientDir;
         this.encounterHistory = encounterHistory;
         this.house = house;
-        city = new City();
+        this.community1 = communities;
+        this.city = city;
+        this.allHouses = new ArrayList<>();
+        this.allCommunities = new ArrayList<>();
 
         if (city != null && city.getCommunities() != null && !city.getCommunities().isEmpty()) {
             community = city.getAllCommunities();
@@ -922,16 +932,40 @@ public class ParentPanel extends javax.swing.JPanel {
         int randomCustomerId = randomNum.nextInt(65536 - 32768);
         person.setId(randomCustomerId);
 
+        // Assign people to a house
         peopleInTheHouseList = people.getPeople().stream().filter(x -> x.getResidence().equals(txtHouseNum.getText())).collect(Collectors.toList());
-
         if (houseMap != null && !houseMap.isEmpty()) {
             houseMap = house.getHouseMap();
         } else {
             houseMap = new HashMap<>();
         }
-
         houseMap.put(txtHouseNum.getText(), peopleInTheHouseList);
         house.setHouseMap(houseMap);
+        house.setCommunity(txtCommunity.getText());
+        allHouses.add(house);
+
+        
+        // Assign houses to a community
+        housesOfACommunity = allHouses.stream().filter(x -> x.getCommunity().equals(txtCommunity.getText())).collect(Collectors.toList());
+        if (communityMap != null && !communityMap.isEmpty()) {
+            communityMap = community1.getCommunityMap();
+        } else {
+            communityMap = new HashMap<>();
+        }
+        communityMap.put(txtCommunity.getText(), housesOfACommunity);
+        community1.setCommunityMap(communityMap);
+        community1.setCity(txtCity.getText());
+        allCommunities.add(community1);
+        
+        // Assign communities to a city
+        communitiesOfACity = allCommunities.stream().filter(x -> x.getCity().equals(txtCity.getText())).collect(Collectors.toList());
+        if(cityMap != null && !cityMap.isEmpty()){
+            cityMap = city.getCityMap();
+        } else {
+            cityMap = new HashMap<>();
+        }
+        cityMap.put(txtCity.getText(), communitiesOfACity);
+        city.setCityMap(cityMap);
 
         JOptionPane.showMessageDialog(this, "Profile saved. Your ID is: " + randomCustomerId);
         txtFirstName.setText("");
@@ -1327,6 +1361,14 @@ public class ParentPanel extends javax.swing.JPanel {
         return house;
     }
 
+    public Community returnCommunityObject() {
+        return community1;
+    }
+    
+    public City returnCityObject(){
+        return city;
+    }
+
     /**
      * switch panel to the input component
      *
@@ -1337,5 +1379,18 @@ public class ParentPanel extends javax.swing.JPanel {
         jLayeredPane1.add(component);
         jLayeredPane1.revalidate();
         jLayeredPane1.repaint();
+    }
+
+    private void updateHouseResidents() {
+        peopleInTheHouseList = people.getPeople().stream().filter(x -> x.getResidence().equals(txtHouseNum.getText())).collect(Collectors.toList());
+
+        if (houseMap != null && !houseMap.isEmpty()) {
+            houseMap = house.getHouseMap();
+        } else {
+            houseMap = new HashMap<>();
+        }
+
+        houseMap.put(txtHouseNum.getText(), peopleInTheHouseList);
+        house.setHouseMap(houseMap);
     }
 }

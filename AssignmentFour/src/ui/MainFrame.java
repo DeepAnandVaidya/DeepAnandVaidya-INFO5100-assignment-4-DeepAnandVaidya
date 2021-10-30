@@ -7,6 +7,8 @@ package ui;
 
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import model.City;
+import model.Community;
 import model.EncounterHistory;
 import model.House;
 import model.PatientDirectory;
@@ -26,13 +28,15 @@ public class MainFrame extends javax.swing.JFrame {
     PatientDirectory patientDir;
     EncounterHistory encounterHistory;
     House house;
+    Community community;
+    City city;
 
     public MainFrame() {
         initComponents();
         lblWatermark.setVisible(false);
         btnHome.setVisible(false);
 
-        ParentPanel parentPanel = new ParentPanel(null, null, null, null);
+        ParentPanel parentPanel = new ParentPanel(null, null, null, null, null, null);
 
         // Initialize PersonDirectory
         if (parentPanel.returnPersonDirectory() == null) {
@@ -55,10 +59,25 @@ public class MainFrame extends javax.swing.JFrame {
             this.encounterHistory = parentPanel.returnEncounterHistory();
         }
 
+        // Initialize House Object
         if (parentPanel.returnHouseObj() == null) {
             house = new House();
         } else {
             this.house = parentPanel.returnHouseObj();
+        }
+
+        // Initialize Community Object
+        if (parentPanel.returnCommunityObject() == null) {
+            community = new Community();
+        } else {
+            this.community = parentPanel.returnCommunityObject();
+        }
+
+        // Initializes City Object
+        if (parentPanel.returnCityObject() == null) {
+            city = new City();
+        } else {
+            this.city = parentPanel.returnCityObject();
         }
 
     }
@@ -225,7 +244,7 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        ParentPanel createPanel = new ParentPanel(people, patientDir, encounterHistory, house);
+        ParentPanel createPanel = new ParentPanel(people, patientDir, encounterHistory, house, community, city);
         jSplitPane1.setRightComponent(createPanel);
         lblWatermark.setVisible(true);
         btnHome.setVisible(true);

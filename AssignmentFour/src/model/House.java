@@ -14,34 +14,8 @@ import java.util.HashMap;
  */
 public class House {
 
-    private String houseNo;
-    private PersonDirectory personDirectory;
     private HashMap<String, ArrayList<Person>> houseMap;
-
-//    public House(HashMap<String, PersonDirectory> newHouse) {
-//        this.houseMap = newHouse;
-//    }
-    public String getHouseNo() {
-        return houseNo;
-    }
-
-    public void setHouseNo(String houseNo) {
-        this.houseNo = houseNo;
-    }
-
-    public PersonDirectory getPersonDirectory() {
-        return personDirectory;
-    }
-
-    public void setPersonDirectory(PersonDirectory personDirectory) {
-        this.personDirectory = personDirectory;
-    }
-
-    public void addHouse(String houseNum) {
-        this.houseNo = houseNum;
-        Community community = new Community();
-        community.addhouse(this);
-    }
+    private String community;
 
     public HashMap<String, ArrayList<Person>> getHouseMap() {
         return houseMap;
@@ -49,6 +23,14 @@ public class House {
 
     public void setHouseMap(HashMap<String, ArrayList<Person>> houseMap) {
         this.houseMap = houseMap;
+    }
+
+    public String getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(String community) {
+        this.community = community;
     }
 
 }

@@ -6,16 +6,18 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author deepv
  */
 public class City {
-//#EFE8E8
 
     private ArrayList<Community> communities;
     private System system;
+    private String city;
+    private HashMap<String, ArrayList<Community>> cityMap;
 
     public City() {
         if (this.communities == null || this.communities.isEmpty()) {
@@ -42,9 +44,25 @@ public class City {
     public void addCommunity(Community community) {
         communities.add(community);
     }
-    
-    public ArrayList<Community> getAllCommunities(){
+
+    public ArrayList<Community> getAllCommunities() {
         return communities;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public HashMap<String, ArrayList<Community>> getCityMap() {
+        return cityMap;
+    }
+
+    public void setCityMap(HashMap<String, ArrayList<Community>> cityMap) {
+        this.cityMap = cityMap;
     }
 
 }
