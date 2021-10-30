@@ -6,6 +6,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -13,7 +14,9 @@ import java.util.ArrayList;
  */
 public class EncounterHistory {
 
+    int id;
     ArrayList<Encounter> encounterHistory;
+    private HashMap<Integer, ArrayList<Encounter>> encounterHistoryMap;
 
     public EncounterHistory() {
         if (this.encounterHistory == null || this.encounterHistory.isEmpty()) {
@@ -29,10 +32,19 @@ public class EncounterHistory {
         this.encounterHistory = encounterHistory;
     }
 
-    public Encounter addEncounter() {
-        Encounter encounter = new Encounter();
-        encounterHistory.add(encounter);
-        return encounter;
+    public int getId() {
+        return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public HashMap<Integer, ArrayList<Encounter>> getEncounterHistoryMap() {
+        return encounterHistoryMap;
+    }
+
+    public void setEncounterHistoryMap(HashMap<Integer, ArrayList<Encounter>> encounterHistoryMap) {
+        this.encounterHistoryMap = encounterHistoryMap;
+    }
 }
