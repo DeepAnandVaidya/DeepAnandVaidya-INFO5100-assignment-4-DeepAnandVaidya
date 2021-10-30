@@ -42,5 +42,9 @@ public class City {
     public void addCommunity(Community community) {
         communities.add(community);
     }
+    
+    public ArrayList<Community> getAllCommunities(){
+        return communities;
+    }
 
 }

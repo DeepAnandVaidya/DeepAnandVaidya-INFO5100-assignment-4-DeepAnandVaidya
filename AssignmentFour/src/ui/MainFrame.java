@@ -8,6 +8,7 @@ package ui;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 import model.EncounterHistory;
+import model.House;
 import model.PatientDirectory;
 import model.Person;
 import model.PersonDirectory;
@@ -24,14 +25,15 @@ public class MainFrame extends javax.swing.JFrame {
     PersonDirectory people;
     PatientDirectory patientDir;
     EncounterHistory encounterHistory;
+    House house;
 
     public MainFrame() {
         initComponents();
         lblWatermark.setVisible(false);
         btnHome.setVisible(false);
 
-        ParentPanel parentPanel = new ParentPanel(null, null, null);
-        
+        ParentPanel parentPanel = new ParentPanel(null, null, null, null);
+
         // Initialize PersonDirectory
         if (parentPanel.returnPersonDirectory() == null) {
             people = new PersonDirectory();
@@ -51,6 +53,12 @@ public class MainFrame extends javax.swing.JFrame {
             encounterHistory = new EncounterHistory();
         } else {
             this.encounterHistory = parentPanel.returnEncounterHistory();
+        }
+
+        if (parentPanel.returnHouseObj() == null) {
+            house = new House();
+        } else {
+            this.house = parentPanel.returnHouseObj();
         }
 
     }
@@ -217,7 +225,7 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        ParentPanel createPanel = new ParentPanel(people, patientDir, encounterHistory);
+        ParentPanel createPanel = new ParentPanel(people, patientDir, encounterHistory, house);
         jSplitPane1.setRightComponent(createPanel);
         lblWatermark.setVisible(true);
         btnHome.setVisible(true);

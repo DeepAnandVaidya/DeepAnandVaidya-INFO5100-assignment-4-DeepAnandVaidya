@@ -5,6 +5,9 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  *
  * @author deepv
@@ -13,7 +16,11 @@ public class House {
 
     private String houseNo;
     private PersonDirectory personDirectory;
+    private HashMap<String, ArrayList<Person>> houseMap;
 
+//    public House(HashMap<String, PersonDirectory> newHouse) {
+//        this.houseMap = newHouse;
+//    }
     public String getHouseNo() {
         return houseNo;
     }
@@ -29,11 +36,19 @@ public class House {
     public void setPersonDirectory(PersonDirectory personDirectory) {
         this.personDirectory = personDirectory;
     }
-   
-    public void addHouse(String houseNum){
+
+    public void addHouse(String houseNum) {
         this.houseNo = houseNum;
         Community community = new Community();
         community.addhouse(this);
     }
-    
+
+    public HashMap<String, ArrayList<Person>> getHouseMap() {
+        return houseMap;
+    }
+
+    public void setHouseMap(HashMap<String, ArrayList<Person>> houseMap) {
+        this.houseMap = houseMap;
+    }
+
 }

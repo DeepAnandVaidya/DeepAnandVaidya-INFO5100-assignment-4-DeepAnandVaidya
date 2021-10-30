@@ -5,26 +5,40 @@
  */
 package ui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import model.City;
+import model.Community;
 import model.Encounter;
 import model.EncounterHistory;
+import model.House;
 import model.Patient;
 import model.PatientDirectory;
 import model.Person;
 import model.PersonDirectory;
 import model.VitalSigns;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.PieDataset;
 
 /**
  *
@@ -33,21 +47,33 @@ import model.VitalSigns;
 public class ParentPanel extends javax.swing.JPanel {
 
     PersonDirectory people;
+    PersonDirectory peopleForHouse;
     PatientDirectory patientDir;
     EncounterHistory encounterHistory;
     int id;
     HashMap encounterHistoryMap;
     ArrayList<Encounter> encounterArrayList = new ArrayList<>();
+    List<Person> peopleInTheHouseList = new ArrayList<>();
     String isPatient;
+    City city;
+    ArrayList<Community> community;
+    HashMap houseMap;
+    House house;
 
     /**
      * Creates new form ParentPanel
      */
-    public ParentPanel(PersonDirectory people, PatientDirectory patientDir, EncounterHistory encounterHistory) {
+    public ParentPanel(PersonDirectory people, PatientDirectory patientDir, EncounterHistory encounterHistory, House house) {
         initComponents();
         this.people = people;
         this.patientDir = patientDir;
         this.encounterHistory = encounterHistory;
+        this.house = house;
+        city = new City();
+
+        if (city != null && city.getCommunities() != null && !city.getCommunities().isEmpty()) {
+            community = city.getAllCommunities();
+        }
 
         btnPreviousReports.setVisible(false);
         pnlTable.setVisible(false);
@@ -84,6 +110,7 @@ public class ParentPanel extends javax.swing.JPanel {
         btnCreateProfile = new javax.swing.JButton();
         btnUpdateProfile = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
+        btnStatistics = new javax.swing.JButton();
         CreateProfilePanel = new javax.swing.JPanel();
         lblBorder3 = new javax.swing.JLabel();
         lblBorder1 = new javax.swing.JLabel();
@@ -140,6 +167,12 @@ public class ParentPanel extends javax.swing.JPanel {
         txtCityUpdate = new javax.swing.JTextField();
         btnSaveProfile1 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        StatisticsPanel = new javax.swing.JPanel();
+        lblBorder11 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        lblHeader5 = new javax.swing.JLabel();
+        lblBorder12 = new javax.swing.JLabel();
+        pnlChart = new javax.swing.JPanel();
 
         jLayeredPane1.setLayout(new java.awt.CardLayout());
 
@@ -224,6 +257,18 @@ public class ParentPanel extends javax.swing.JPanel {
             }
         });
 
+        btnStatistics.setBackground(new java.awt.Color(204, 255, 204));
+        btnStatistics.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnStatistics.setForeground(new java.awt.Color(0, 153, 51));
+        btnStatistics.setText("Stats");
+        btnStatistics.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnStatistics.setFocusPainted(false);
+        btnStatistics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStatisticsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ViewAllProfilePanelLayout = new javax.swing.GroupLayout(ViewAllProfilePanel);
         ViewAllProfilePanel.setLayout(ViewAllProfilePanelLayout);
         ViewAllProfilePanelLayout.setHorizontalGroup(
@@ -238,14 +283,17 @@ public class ParentPanel extends javax.swing.JPanel {
                         .addGap(203, 203, 203))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
                         .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
-                                .addComponent(btnCreateProfile)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnUpdateProfile)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnAddVitals))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnDelete))
+                            .addComponent(btnDelete)
+                            .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
+                                    .addComponent(btnCreateProfile)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnUpdateProfile)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(btnAddVitals)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnStatistics))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(40, 40, 40))))
         );
         ViewAllProfilePanelLayout.setVerticalGroup(
@@ -258,7 +306,8 @@ public class ParentPanel extends javax.swing.JPanel {
                 .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddVitals)
                     .addComponent(btnCreateProfile)
-                    .addComponent(btnUpdateProfile))
+                    .addComponent(btnUpdateProfile)
+                    .addComponent(btnStatistics))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -765,6 +814,79 @@ public class ParentPanel extends javax.swing.JPanel {
 
         jLayeredPane1.add(UpdateProfilePanel, "card5");
 
+        StatisticsPanel.setBackground(new java.awt.Color(239, 232, 232));
+
+        lblBorder11.setBackground(new java.awt.Color(255, 204, 204));
+        lblBorder11.setOpaque(true);
+
+        jButton7.setBackground(new java.awt.Color(255, 255, 255));
+        jButton7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton7.setText("BACK");
+        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton7.setFocusPainted(false);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        lblHeader5.setBackground(new java.awt.Color(239, 232, 232));
+        lblHeader5.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        lblHeader5.setForeground(new java.awt.Color(0, 0, 0));
+        lblHeader5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblHeader5.setText("<html>STATISTIC<b><span  font color=\"rgb(255,102,102)\">s</span></b></html> ");
+        lblHeader5.setOpaque(true);
+
+        lblBorder12.setBackground(new java.awt.Color(255, 204, 204));
+        lblBorder12.setOpaque(true);
+
+        pnlChart.setLayout(new javax.swing.BoxLayout(pnlChart, javax.swing.BoxLayout.LINE_AXIS));
+
+        javax.swing.GroupLayout StatisticsPanelLayout = new javax.swing.GroupLayout(StatisticsPanel);
+        StatisticsPanel.setLayout(StatisticsPanelLayout);
+        StatisticsPanelLayout.setHorizontalGroup(
+            StatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, 611, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
+            .addGroup(StatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(StatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblBorder12, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                        .addComponent(lblBorder11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                            .addGap(20, 20, 20)
+                            .addComponent(jButton7)
+                            .addGap(117, 117, 117)
+                            .addComponent(lblHeader5, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addContainerGap()))
+        );
+        StatisticsPanelLayout.setVerticalGroup(
+            StatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                .addGap(117, 117, 117)
+                .addComponent(pnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, 480, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
+            .addGroup(StatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(StatisticsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                            .addComponent(lblBorder11, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(lblHeader5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(StatisticsPanelLayout.createSequentialGroup()
+                            .addGap(43, 43, 43)
+                            .addComponent(jButton7)))
+                    .addGap(551, 551, 551)
+                    .addComponent(lblBorder12, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        jLayeredPane1.add(StatisticsPanel, "card6");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -799,6 +921,17 @@ public class ParentPanel extends javax.swing.JPanel {
         Random randomNum = new Random();
         int randomCustomerId = randomNum.nextInt(65536 - 32768);
         person.setId(randomCustomerId);
+
+        peopleInTheHouseList = people.getPeople().stream().filter(x -> x.getResidence().equals(txtHouseNum.getText())).collect(Collectors.toList());
+
+        if (houseMap != null && !houseMap.isEmpty()) {
+            houseMap = house.getHouseMap();
+        } else {
+            houseMap = new HashMap<>();
+        }
+
+        houseMap.put(txtHouseNum.getText(), peopleInTheHouseList);
+        house.setHouseMap(houseMap);
 
         JOptionPane.showMessageDialog(this, "Profile saved. Your ID is: " + randomCustomerId);
         txtFirstName.setText("");
@@ -1003,10 +1136,38 @@ public class ParentPanel extends javax.swing.JPanel {
         switchPanels(ViewAllProfilePanel);
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        switchPanels(ViewAllProfilePanel);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void btnStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatisticsActionPerformed
+        switchPanels(StatisticsPanel);
+        DefaultCategoryDataset dcd = new DefaultCategoryDataset();
+        dcd.setValue(78.80, "Marks", "Ganesh");
+        dcd.setValue(68.80, "Marks", "Dinesh");
+        dcd.setValue(88.80, "Marks", "John");
+        dcd.setValue(98.80, "Marks", "Alisha");
+        dcd.setValue(58.80, "Marks", "Sachin");
+
+        JFreeChart jchart = ChartFactory.createBarChart3D("Student Record", "Student Name", "Studen Marks", dcd, PlotOrientation.VERTICAL, true, true, false);
+        CategoryPlot plot = jchart.getCategoryPlot();
+        plot.setRangeGridlinePaint(Color.black);
+
+        ChartFrame chartFrm = new ChartFrame("Student Record", jchart, true);
+        chartFrm.setVisible(true);
+        chartFrm.setSize(500, 400);
+        ChartPanel chartPanel = new ChartPanel(jchart);
+        chartFrm.dispose();
+        pnlChart.removeAll();
+        pnlChart.add(chartPanel);
+        pnlChart.updateUI();
+    }//GEN-LAST:event_btnStatisticsActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AddVitalsPanel;
     private javax.swing.JPanel CreateProfilePanel;
+    private javax.swing.JPanel StatisticsPanel;
     private javax.swing.JPanel UpdateProfilePanel;
     private javax.swing.JPanel ViewAllProfilePanel;
     private javax.swing.JButton btnAddVitals;
@@ -1016,10 +1177,12 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnSaveProfile1;
     private javax.swing.JButton btnSaveVitals;
+    private javax.swing.JButton btnStatistics;
     private javax.swing.JButton btnUpdateProfile;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton7;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1027,6 +1190,8 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblAge;
     private javax.swing.JLabel lblAgeUpdate;
     private javax.swing.JLabel lblBorder1;
+    private javax.swing.JLabel lblBorder11;
+    private javax.swing.JLabel lblBorder12;
     private javax.swing.JLabel lblBorder2;
     private javax.swing.JLabel lblBorder3;
     private javax.swing.JLabel lblBorder4;
@@ -1043,6 +1208,7 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblHeader1;
     private javax.swing.JLabel lblHeader2;
     private javax.swing.JLabel lblHeader3;
+    private javax.swing.JLabel lblHeader5;
     private javax.swing.JLabel lblHouseNum;
     private javax.swing.JLabel lblHouseNumUpdat;
     private javax.swing.JLabel lblId;
@@ -1053,6 +1219,7 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblPressure;
     private javax.swing.JLabel lblPulse;
     private javax.swing.JLabel lblTemperature;
+    private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlTable;
     private javax.swing.JTable tblDashboard;
     private javax.swing.JTable tblPreviousReports;
@@ -1154,6 +1321,10 @@ public class ParentPanel extends javax.swing.JPanel {
             }
         }
         return newPatient;
+    }
+
+    public House returnHouseObj() {
+        return house;
     }
 
     /**

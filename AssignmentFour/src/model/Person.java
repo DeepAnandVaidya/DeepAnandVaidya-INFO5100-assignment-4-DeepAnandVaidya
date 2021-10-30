@@ -50,7 +50,7 @@ public class Person {
     
     public void setResidence(String residence) {
         this.residence = residence;
-        addHouse(residence);
+//        addHouse(residence);
     }
     
     public String getCommunity() {
@@ -85,10 +85,10 @@ public class Person {
         this.id = id;
     }
     
-    public void addHouse(String houseNum) {
-        House house = new House();
-        house.addHouse(houseNum);
-    }
+//    public void addHouse(String houseNum) {
+//        House house = new House();
+//        house.addHouse(houseNum);
+//    }
     
     public void updateAsAPatient(int id, PersonDirectory people) {
         for (Person person : people.getPeople()) {
