@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -690,7 +691,7 @@ public class ParentPanel extends javax.swing.JPanel {
         int selectedRowIndex = tblDashboard.getSelectedRow();
         DefaultTableModel model = (DefaultTableModel) tblDashboard.getModel();
         Person selectedPerson = (Person) model.getValueAt(selectedRowIndex, 0);
-        
+
         // map the vital signs attributes
         VitalSigns vitalSigns = new VitalSigns(selectedPerson.getId(), selectedPerson.getFirstName(), selectedPerson.getLastName());
         vitalSigns.setTemperature(Integer.parseInt(txtTemperature.getText()));
@@ -704,7 +705,6 @@ public class ParentPanel extends javax.swing.JPanel {
         Patient patient = patientDir.addPatients();
         patient.setPerson(selectedPerson);
 
-        
         // Initialize the encounter history arraylist
         if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty() && encounterHistoryMap.get(selectedPerson.getId()) != null) {
             encounterArrayList = encounterHistory.getEncounterHistory();
@@ -719,14 +719,13 @@ public class ParentPanel extends javax.swing.JPanel {
         encounterHistory.setEncounterHistory(encounterArrayList);
         patient.setEncounterHistory(encounterHistory);
 
-        
         // Initialize the encounter history HashMap
         if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty()) {
             encounterHistoryMap = this.encounterHistory.getEncounterHistoryMap();
         } else {
             encounterHistoryMap = new HashMap<>();
         }
-        
+
         // Put values into the HashMap
         encounterHistoryMap.put(selectedPerson.getId(), encounterHistory.getEncounterHistory());
         encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
@@ -758,7 +757,7 @@ public class ParentPanel extends javax.swing.JPanel {
         pnlTable.setVisible(true);
         btnReportDetails.setVisible(true);
         Patient patient = returnPatientObject(id);
-        populatePreviousReports(patient);
+        populatePreviousReports(encounterHistoryMap, id);
     }//GEN-LAST:event_btnPreviousReportsActionPerformed
 
     private void btnReportDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportDetailsActionPerformed
@@ -863,14 +862,18 @@ public class ParentPanel extends javax.swing.JPanel {
      * Populate encounter history
      *
      */
-    private void populatePreviousReports(Patient patient) {
+    private void populatePreviousReports(HashMap<Integer, ArrayList<Encounter>> encounterHistoryMap1, int id) {
         DefaultTableModel model = (DefaultTableModel) tblPreviousReports.getModel();
         model.setRowCount(0);
 
-        for (Encounter enounter : patient.getEncounterHistory().getEncounterHistory()) {
-            Object[] row = new Object[1];
-            row[0] = enounter.getVitalSigns().getDate();
-            model.addRow(row);
+        for (Map.Entry<Integer, ArrayList<Encounter>> mapIterator : encounterHistoryMap1.entrySet()) {
+            if (mapIterator.getKey() == id) {
+                for (Encounter enc : mapIterator.getValue()) {
+                    Object[] row = new Object[1];
+                    row[0] = enc.getVitalSigns().getDate();
+                    model.addRow(row);
+                }
+            }
         }
     }
 
