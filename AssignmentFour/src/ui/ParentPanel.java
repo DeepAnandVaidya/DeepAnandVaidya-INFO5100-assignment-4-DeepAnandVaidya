@@ -23,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import model.City;
 import model.Community;
+import model.ConstantsClass;
 import model.Encounter;
 import model.EncounterHistory;
 import model.House;
@@ -944,7 +945,6 @@ public class ParentPanel extends javax.swing.JPanel {
         house.setCommunity(txtCommunity.getText());
         allHouses.add(house);
 
-        
         // Assign houses to a community
         housesOfACommunity = allHouses.stream().filter(x -> x.getCommunity().equals(txtCommunity.getText())).collect(Collectors.toList());
         if (communityMap != null && !communityMap.isEmpty()) {
@@ -956,10 +956,10 @@ public class ParentPanel extends javax.swing.JPanel {
         community1.setCommunityMap(communityMap);
         community1.setCity(txtCity.getText());
         allCommunities.add(community1);
-        
+
         // Assign communities to a city
         communitiesOfACity = allCommunities.stream().filter(x -> x.getCity().equals(txtCity.getText())).collect(Collectors.toList());
-        if(cityMap != null && !cityMap.isEmpty()){
+        if (cityMap != null && !cityMap.isEmpty()) {
             cityMap = city.getCityMap();
         } else {
             cityMap = new HashMap<>();
@@ -1177,11 +1177,16 @@ public class ParentPanel extends javax.swing.JPanel {
     private void btnStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatisticsActionPerformed
         switchPanels(StatisticsPanel);
         DefaultCategoryDataset dcd = new DefaultCategoryDataset();
-        dcd.setValue(78.80, "Marks", "Ganesh");
-        dcd.setValue(68.80, "Marks", "Dinesh");
-        dcd.setValue(88.80, "Marks", "John");
-        dcd.setValue(98.80, "Marks", "Alisha");
-        dcd.setValue(58.80, "Marks", "Sachin");
+//        dcd.setValue(78.80, "Marks", "Ganesh");
+//        dcd.setValue(68.80, "Marks", "Dinesh");
+//        dcd.setValue(88.80, "Marks", "John");
+//        dcd.setValue(98.80, "Marks", "Alisha");
+//        dcd.setValue(58.80, "Marks", "Sachin");
+
+        HashMap<String, Integer> graphMap = getAbnormalPatients(community1);
+        for (Map.Entry<String, Integer> graphItr : graphMap.entrySet()) {
+            dcd.setValue(graphItr.getValue(), "BP", graphItr.getKey().toString());
+        }
 
         JFreeChart jchart = ChartFactory.createBarChart3D("Student Record", "Student Name", "Studen Marks", dcd, PlotOrientation.VERTICAL, true, true, false);
         CategoryPlot plot = jchart.getCategoryPlot();
@@ -1364,8 +1369,8 @@ public class ParentPanel extends javax.swing.JPanel {
     public Community returnCommunityObject() {
         return community1;
     }
-    
-    public City returnCityObject(){
+
+    public City returnCityObject() {
         return city;
     }
 
@@ -1392,5 +1397,47 @@ public class ParentPanel extends javax.swing.JPanel {
 
         houseMap.put(txtHouseNum.getText(), peopleInTheHouseList);
         house.setHouseMap(houseMap);
+    }
+
+    private HashMap<String, Integer> getAbnormalPatients(Community communityObject) {
+        HashMap<String, Integer> abnormalPatients = new HashMap<>();
+        Integer numOfPatient = 0;
+
+        for (Map.Entry<String, ArrayList<House>> itr : communityObject.getCommunityMap().entrySet()) {
+            for (House house : itr.getValue()) {
+                for (Map.Entry<String, ArrayList<Person>> houseItr : house.getHouseMap().entrySet()) {
+                    for (Person person : houseItr.getValue()) {
+                        if (person.isIsPatient()) {
+                            for (Patient patient : patientDir.getPatientList()) {
+                                double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
+                                int age = Integer.parseInt(patient.getPerson().getAge());
+                                if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
+                                    numOfPatient++;
+                                } else if (age >= 26 && age <= 30 && latestReading > ConstantsClass.twentySixToThirty) {
+                                    numOfPatient++;
+                                } else if (age >= 31 && age <= 35 && latestReading > ConstantsClass.thirtyOneToThirtyFive) {
+                                    numOfPatient++;
+                                } else if (age >= 36 && age <= 40 && latestReading > ConstantsClass.thirtySixToFourty) {
+                                    numOfPatient++;
+                                } else if (age >= 41 && age <= 45 && latestReading > ConstantsClass.fortyOneTofortyFive) {
+                                    numOfPatient++;
+                                } else if (age >= 46 && age <= 50 && latestReading > ConstantsClass.fourtySixToFifty) {
+                                    numOfPatient++;
+                                } else if (age >= 51 && age <= 55 && latestReading > ConstantsClass.fiftyOneToFiftyFive) {
+                                    numOfPatient++;
+                                } else if (age >= 56 && age <= 60 && latestReading > ConstantsClass.fiftySixToSixty) {
+                                    numOfPatient++;
+                                } else if (age >= 61 && age <= 65 && latestReading > ConstantsClass.sixtyOneToSixtyFive) {
+                                    numOfPatient++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            abnormalPatients.put(itr.getKey(), numOfPatient);
+        }
+
+        return abnormalPatients;
     }
 }
