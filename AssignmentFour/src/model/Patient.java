@@ -13,6 +13,7 @@ public class Patient {
 
     private EncounterHistory encounterHistory;
     private Person person;
+    private boolean isAbnormal;
 
     public EncounterHistory getEncounterHistory() {
         return encounterHistory;
@@ -28,6 +29,14 @@ public class Patient {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public boolean isIsAbnormal() {
+        return isAbnormal;
+    }
+
+    public void setIsAbnormal(boolean isAbnormal) {
+        this.isAbnormal = isAbnormal;
     }
 
 }

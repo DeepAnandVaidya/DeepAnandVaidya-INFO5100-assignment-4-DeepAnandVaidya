@@ -1059,6 +1059,30 @@ public class ParentPanel extends javax.swing.JPanel {
         encounterHistory.setEncounterHistory(encounterArrayList);
         patient.setEncounterHistory(encounterHistory);
 
+        double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
+        int age = Integer.parseInt(patient.getPerson().getAge());
+        if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 26 && age <= 30 && latestReading > ConstantsClass.twentySixToThirty) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 31 && age <= 35 && latestReading > ConstantsClass.thirtyOneToThirtyFive) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 36 && age <= 40 && latestReading > ConstantsClass.thirtySixToFourty) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 41 && age <= 45 && latestReading > ConstantsClass.fortyOneTofortyFive) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 46 && age <= 50 && latestReading > ConstantsClass.fourtySixToFifty) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 51 && age <= 55 && latestReading > ConstantsClass.fiftyOneToFiftyFive) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 56 && age <= 60 && latestReading > ConstantsClass.fiftySixToSixty) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 61 && age <= 65 && latestReading > ConstantsClass.sixtyOneToSixtyFive) {
+            patient.setIsAbnormal(true);
+        }
+
+        System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
+
         // Initialize the encounter history HashMap
         if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty()) {
             encounterHistoryMap = this.encounterHistory.getEncounterHistoryMap();
@@ -1402,52 +1426,15 @@ public class ParentPanel extends javax.swing.JPanel {
 
     private HashMap<String, Integer> getAbnormalPatients(Community communityObject) {
         HashMap<String, Integer> abnormalPatients = new HashMap<>();
-        Integer numOfPatient = 0;
         ArrayList<String> flagList = new ArrayList<>();
 
         for (Map.Entry<String, ArrayList<House>> itr : communityObject.getCommunityMap().entrySet()) {
-            System.out.println("loop 1 executed");
-            for (House house : itr.getValue()) {
-                System.out.println("loop 2 executed");
-                for (Map.Entry<String, ArrayList<Person>> houseItr : house.getHouseMap().entrySet()) {
-                    if (!flagList.contains(houseItr.getKey())) {
-                        flagList.add(houseItr.getKey());
-                        System.out.println("loop 3 executed");
-                        for (Person person : houseItr.getValue()) {
-                            System.out.println("loop 4 executed");
-                            if (person.isIsPatient() && person.getResidence().equals(houseItr.getKey())) {
-                                for (Patient patient : patientDir.getPatientList()) {
-                                    System.out.println("loop 5 executed");
-                                    if (patient.getPerson().getId() == person.getId()) {
-                                        double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
-                                        int age = Integer.parseInt(patient.getPerson().getAge());
-                                        if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
-                                            numOfPatient++;
-                                        } else if (age >= 26 && age <= 30 && latestReading > ConstantsClass.twentySixToThirty) {
-                                            numOfPatient++;
-                                            System.out.println("Count: " + numOfPatient);
-                                        } else if (age >= 31 && age <= 35 && latestReading > ConstantsClass.thirtyOneToThirtyFive) {
-                                            numOfPatient++;
-                                        } else if (age >= 36 && age <= 40 && latestReading > ConstantsClass.thirtySixToFourty) {
-                                            numOfPatient++;
-                                        } else if (age >= 41 && age <= 45 && latestReading > ConstantsClass.fortyOneTofortyFive) {
-                                            numOfPatient++;
-                                        } else if (age >= 46 && age <= 50 && latestReading > ConstantsClass.fourtySixToFifty) {
-                                            numOfPatient++;
-                                        } else if (age >= 51 && age <= 55 && latestReading > ConstantsClass.fiftyOneToFiftyFive) {
-                                            numOfPatient++;
-                                        } else if (age >= 56 && age <= 60 && latestReading > ConstantsClass.fiftySixToSixty) {
-                                            numOfPatient++;
-                                        } else if (age >= 61 && age <= 65 && latestReading > ConstantsClass.sixtyOneToSixtyFive) {
-                                            numOfPatient++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            Integer numOfPatient = 0;
+           for(Patient patient : patientDir.getPatientList()) {
+               if(patient.isIsAbnormal() && patient.getPerson().getCommunity().equals(itr.getKey())){
+                   numOfPatient++;
+               }
+           }
             abnormalPatients.put(itr.getKey(), numOfPatient);
         }
 
