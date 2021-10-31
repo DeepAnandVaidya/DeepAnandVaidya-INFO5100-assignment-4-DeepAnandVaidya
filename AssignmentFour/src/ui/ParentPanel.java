@@ -167,6 +167,7 @@ public class ParentPanel extends javax.swing.JPanel {
         pnlTable = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPreviousReports = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
         UpdateProfilePanel = new javax.swing.JPanel();
         lblBorder5 = new javax.swing.JLabel();
         lblBorder6 = new javax.swing.JLabel();
@@ -624,6 +625,9 @@ public class ParentPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel1.setText("Enter in degree Fahrenheit");
+
         javax.swing.GroupLayout AddVitalsPanelLayout = new javax.swing.GroupLayout(AddVitalsPanel);
         AddVitalsPanel.setLayout(AddVitalsPanelLayout);
         AddVitalsPanelLayout.setHorizontalGroup(
@@ -653,15 +657,18 @@ public class ParentPanel extends javax.swing.JPanel {
                                     .addComponent(lblName, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(18, 18, 18)
                                 .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtPressure, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtPulse, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(AddVitalsPanelLayout.createSequentialGroup()
+                                        .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel1))))))
                     .addGroup(AddVitalsPanelLayout.createSequentialGroup()
                         .addGap(92, 92, 92)
                         .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(91, Short.MAX_VALUE))
         );
         AddVitalsPanelLayout.setVerticalGroup(
             AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -687,7 +694,8 @@ public class ParentPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTemperature)
-                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtTemperature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
                 .addGap(18, 18, 18)
                 .addGroup(AddVitalsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPressure)
@@ -1105,31 +1113,7 @@ public class ParentPanel extends javax.swing.JPanel {
             encounterHistory.setEncounterHistory(encounterArrayList);
             patient.setEncounterHistory(encounterHistory);
 
-            double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
-            int age = Integer.parseInt(patient.getPerson().getAge());
-            if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 26 && age <= 30 && (latestReading > ConstantsClass.twentySixToThirty || latestReading < ConstantsClass.twentySixToThirtyLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 31 && age <= 35 && (latestReading > ConstantsClass.thirtyOneToThirtyFive || latestReading > ConstantsClass.thirtyOneToThirtyFiveLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 36 && age <= 40 && (latestReading > ConstantsClass.thirtySixToFourty || latestReading > ConstantsClass.thirtySixToFourtyLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 41 && age <= 45 && (latestReading > ConstantsClass.fortyOneTofortyFive || latestReading > ConstantsClass.fortyOneTofortyFiveLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 46 && age <= 50 && (latestReading > ConstantsClass.fourtySixToFifty || latestReading > ConstantsClass.fourtySixToFiftyLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 51 && age <= 55 && (latestReading > ConstantsClass.fiftyOneToFiftyFive || latestReading > ConstantsClass.fiftyOneToFiftyFiveLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 56 && age <= 60 && (latestReading > ConstantsClass.fiftySixToSixty || latestReading > ConstantsClass.fiftySixToSixtyLow)) {
-                patient.setIsAbnormal(true);
-            } else if (age >= 61 && age <= 65 && (latestReading > ConstantsClass.sixtyOneToSixtyFive || latestReading > ConstantsClass.fiftySixToSixtyLow)) {
-                patient.setIsAbnormal(true);
-            } else {
-                patient.setIsAbnormal(false);
-            }
-
-            System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
+            bloodPressureEvaluator(patient.getPerson().getId());
 
             // Initialize the encounter history HashMap
             if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty()) {
@@ -1234,7 +1218,14 @@ public class ParentPanel extends javax.swing.JPanel {
             Person personToBeUpdated = people.getPeople().stream().filter(x -> x.getId() == id).findAny().orElse(null);
             int indexOfPersonToBeUpdated = people.getPeople().indexOf(personToBeUpdated);
             people.getPeople().set(indexOfPersonToBeUpdated, person);
+            
+            Patient patient = patientDir.getPatientList().stream().filter(x -> x.getPerson().getId() == id).findAny().orElse(null);
+            patient.setPerson(person);
+            int indexOfPatientToBeUpdated = patientDir.getPatientList().indexOf(patient);
+            patientDir.getPatientList().set(indexOfPatientToBeUpdated, patient);
+            
             JOptionPane.showMessageDialog(this, "Profile update for ID: " + id);
+            bloodPressureEvaluator(id);
             txtNameUpdate.setText("");
             txtAgeUpdate.setText("");
             txtCityUpdate.setText("");
@@ -1308,6 +1299,7 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton7;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -1597,19 +1589,19 @@ public class ParentPanel extends javax.swing.JPanel {
     private boolean updateProfileValidations() {
         boolean validData = true;
 
-        if (txtAge.getText().isBlank() || txtAge.getText().isEmpty()) {
+        if (txtAgeUpdate.getText().isBlank() || txtAgeUpdate.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter the Age.");
             validData = false;
             return validData;
-        } else if (txtHouseNum.getText().isBlank() || txtHouseNum.getText().isEmpty()) {
+        } else if (txtHouseNumUpdate.getText().isBlank() || txtHouseNumUpdate.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter the House Number.");
             validData = false;
             return validData;
-        } else if (txtCommunity.getText().isBlank() || txtCommunity.getText().isEmpty()) {
+        } else if (txtCommunityUpdate.getText().isBlank() || txtCommunityUpdate.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter the Community.");
             validData = false;
             return validData;
-        } else if (txtCity.getText().isBlank() || txtCity.getText().isEmpty()) {
+        } else if (txtCityUpdate.getText().isBlank() || txtCityUpdate.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter the City.");
             validData = false;
             return validData;
@@ -1636,5 +1628,34 @@ public class ParentPanel extends javax.swing.JPanel {
         } else {
             return true;
         }
+    }
+
+    private void bloodPressureEvaluator(int id) {
+        Patient patient = patientDir.getPatientList().stream().filter(x -> x.getPerson().getId() == id).findAny().orElse(null);
+        double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
+        int age = Integer.parseInt(patient.getPerson().getAge());
+        if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 26 && age <= 30 && (latestReading > ConstantsClass.twentySixToThirty || latestReading < ConstantsClass.twentySixToThirtyLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 31 && age <= 35 && (latestReading > ConstantsClass.thirtyOneToThirtyFive || latestReading > ConstantsClass.thirtyOneToThirtyFiveLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 36 && age <= 40 && (latestReading > ConstantsClass.thirtySixToFourty || latestReading > ConstantsClass.thirtySixToFourtyLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 41 && age <= 45 && (latestReading > ConstantsClass.fortyOneTofortyFive || latestReading > ConstantsClass.fortyOneTofortyFiveLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 46 && age <= 50 && (latestReading > ConstantsClass.fourtySixToFifty || latestReading > ConstantsClass.fourtySixToFiftyLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 51 && age <= 55 && (latestReading > ConstantsClass.fiftyOneToFiftyFive || latestReading > ConstantsClass.fiftyOneToFiftyFiveLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 56 && age <= 60 && (latestReading > ConstantsClass.fiftySixToSixty || latestReading > ConstantsClass.fiftySixToSixtyLow)) {
+            patient.setIsAbnormal(true);
+        } else if (age >= 61 && age <= 65 && (latestReading > ConstantsClass.sixtyOneToSixtyFive || latestReading > ConstantsClass.fiftySixToSixtyLow)) {
+            patient.setIsAbnormal(true);
+        } else {
+            patient.setIsAbnormal(false);
+        }
+
+        System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
     }
 }
