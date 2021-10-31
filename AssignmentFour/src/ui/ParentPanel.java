@@ -1183,46 +1183,12 @@ public class ParentPanel extends javax.swing.JPanel {
 
         // if the person being deleted is a patient, remove the references for that person from the encounter history
         if (selectedIndividual.isIsPatient()) {
-            patientDir.getPatientList().remove(selectedIndividual);
-            patientDir.getPatientList().indexOf(selectedIndividual.getId());
+            Patient patientToBeRemoved = patientDir.getPatientList().stream().filter(x -> x.getPerson().getId() == selectedIndividual.getId()).findAny().orElse(null);
+            patientDir.getPatientList().remove(patientToBeRemoved);
             encounterHistoryMap.remove(id);
             encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
         }
 
-//        for (Map.Entry<String, ArrayList<House>> communityItr : community1.getCommunityMap().entrySet()) {
-//            if (communityItr.getKey().equals(selectedIndividual.getCommunity())) {
-//                if (communityItr.getValue().size() == 1) {
-//                    community1.getCommunityMap().remove(communityItr.getKey());
-//                }
-//            }
-//        }
-
-//        String cityKey = "";
-//        ArrayList<Community> communityList = null;
-//        for (Map.Entry<String, ArrayList<Community>> cityItr : city.getCityMap().entrySet()) {
-//
-//            // If the city matches the deleted city
-//            if (cityItr.getKey().equals(selectedIndividual.getCity())) {
-//                cityKey = cityItr.getKey();
-//                communityList = new ArrayList<>();
-//
-//                // If there is only one community in that city, delete the data from the map
-//                if (cityItr.getValue().size() == 1) {
-//                    city.getCityMap().remove(cityItr.getKey());
-//                } // Else if there are multiple communities, remove the one that is being deleted
-//                else {
-//                    for (Community community : cityItr.getValue()) {
-//                        for (Map.Entry<String, ArrayList<House>> communityItr : community.getCommunityMap().entrySet()) {
-//                            if (!communityItr.getKey().equals(selectedIndividual.getCommunity())) {
-//                                communityList.add(community);
-//                            }
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
-//        city.getCityMap().put(cityKey, communityList);
         // after deleting the references, delete the actual person from person directory
         people.getPeople().remove(selectedIndividual);
         labelMaker();
@@ -1522,10 +1488,11 @@ public class ParentPanel extends javax.swing.JPanel {
     }
 
     private Community refreshCommunities(Community communityObject) {
-        int counter = 0;
+        
         String key = "";
 
         for (Map.Entry<String, ArrayList<House>> itr : communityObject.getCommunityMap().entrySet()) {
+            int counter = 0;
             for (Person person : people.getPeople()) {
                 if (person.getCommunity().equals(itr.getKey())) {
                     counter++;
@@ -1536,7 +1503,7 @@ public class ParentPanel extends javax.swing.JPanel {
                 key = itr.getKey();
             }
         }
-        if (counter == 0) {
+        if (!key.equals("")) {
             communityObject.getCommunityMap().remove(key);
         }
 
