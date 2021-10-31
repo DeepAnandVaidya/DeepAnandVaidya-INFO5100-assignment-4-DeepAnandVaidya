@@ -100,6 +100,7 @@ public class ParentPanel extends javax.swing.JPanel {
         lblProfiles.setVisible(false);
         lblPatients.setVisible(false);
         lblPercentage.setVisible(false);
+        labelMaker();
     }
 
     /**
@@ -950,68 +951,70 @@ public class ParentPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
-        this.allHouses = new ArrayList<>();
-        Person person = people.addPeople();
-        person.setFirstName(txtFirstName.getText());
-        person.setLastName(txtLastName.getText());
-        person.setAge(txtAge.getText());
-        person.setResidence(txtHouseNum.getText());
-        person.setCommunity(txtCommunity.getText());
-        person.setCity(txtCity.getText());
+        if (validations()) {
+            this.allHouses = new ArrayList<>();
+            Person person = people.addPeople();
+            person.setFirstName(txtFirstName.getText());
+            person.setLastName(txtLastName.getText());
+            person.setAge(txtAge.getText());
+            person.setResidence(txtHouseNum.getText());
+            person.setCommunity(txtCommunity.getText());
+            person.setCity(txtCity.getText());
 
-        // Assign a random number as the ID
-        Random randomNum = new Random();
-        int randomCustomerId = randomNum.nextInt(65536 - 32768);
-        person.setId(randomCustomerId);
+            // Assign a random number as the ID
+            Random randomNum = new Random();
+            int randomCustomerId = randomNum.nextInt(65536 - 32768);
+            person.setId(randomCustomerId);
 
-        // Assign people to a house
-        peopleInTheHouseList = people.getPeople().stream().filter(x -> x.getResidence().equals(txtHouseNum.getText())).collect(Collectors.toList());
-        if (houseMap != null && !houseMap.isEmpty()) {
-            houseMap = house.getHouseMap();
-        } else {
-            houseMap = new HashMap<>();
+            // Assign people to a house
+            peopleInTheHouseList = people.getPeople().stream().filter(x -> x.getResidence().equals(txtHouseNum.getText())).collect(Collectors.toList());
+            if (houseMap != null && !houseMap.isEmpty()) {
+                houseMap = house.getHouseMap();
+            } else {
+                houseMap = new HashMap<>();
+            }
+            houseMap.put(txtHouseNum.getText(), peopleInTheHouseList);
+            house.setHouseMap(houseMap);
+            house.setCommunity(txtCommunity.getText());
+            allHouses.add(house);
+
+            // Assign houses to a community
+            housesOfACommunity = allHouses.stream().filter(x -> x.getCommunity().equals(txtCommunity.getText())).collect(Collectors.toList());
+            if (communityMap != null && !communityMap.isEmpty()) {
+                communityMap = community1.getCommunityMap();
+            } else {
+                communityMap = new HashMap<>();
+            }
+            communityMap.put(txtCommunity.getText(), housesOfACommunity);
+            community1.setCommunityMap(communityMap);
+            community1.setCity(txtCity.getText());
+            allCommunities.add(community1);
+
+            // Assign communities to a city
+            communitiesOfACity = allCommunities.stream().filter(x -> x.getCity().equals(txtCity.getText())).collect(Collectors.toList());
+            if (cityMap != null && !cityMap.isEmpty()) {
+                cityMap = city.getCityMap();
+            } else {
+                cityMap = new HashMap<>();
+            }
+            cityMap.put(txtCity.getText(), communitiesOfACity);
+            city.setCityMap(cityMap);
+
+            JOptionPane.showMessageDialog(this, "Profile saved. Your ID is: " + randomCustomerId);
+            labelMaker();
+            txtFirstName.setText("");
+            txtLastName.setText("");
+            txtAge.setText("");
+            txtHouseNum.setText("");
+            txtCommunity.setText("");
+            txtCity.setText("");
+
+            // Switch the card layout
+            switchPanels(ViewAllProfilePanel);
+
+            // Populate the table
+            populateTable();
         }
-        houseMap.put(txtHouseNum.getText(), peopleInTheHouseList);
-        house.setHouseMap(houseMap);
-        house.setCommunity(txtCommunity.getText());
-        allHouses.add(house);
-
-        // Assign houses to a community
-        housesOfACommunity = allHouses.stream().filter(x -> x.getCommunity().equals(txtCommunity.getText())).collect(Collectors.toList());
-        if (communityMap != null && !communityMap.isEmpty()) {
-            communityMap = community1.getCommunityMap();
-        } else {
-            communityMap = new HashMap<>();
-        }
-        communityMap.put(txtCommunity.getText(), housesOfACommunity);
-        community1.setCommunityMap(communityMap);
-        community1.setCity(txtCity.getText());
-        allCommunities.add(community1);
-
-        // Assign communities to a city
-        communitiesOfACity = allCommunities.stream().filter(x -> x.getCity().equals(txtCity.getText())).collect(Collectors.toList());
-        if (cityMap != null && !cityMap.isEmpty()) {
-            cityMap = city.getCityMap();
-        } else {
-            cityMap = new HashMap<>();
-        }
-        cityMap.put(txtCity.getText(), communitiesOfACity);
-        city.setCityMap(cityMap);
-
-        JOptionPane.showMessageDialog(this, "Profile saved. Your ID is: " + randomCustomerId);
-        labelMaker();
-        txtFirstName.setText("");
-        txtLastName.setText("");
-        txtAge.setText("");
-        txtHouseNum.setText("");
-        txtCommunity.setText("");
-        txtCity.setText("");
-
-        // Switch the card layout
-        switchPanels(ViewAllProfilePanel);
-
-        // Populate the table
-        populateTable();
     }//GEN-LAST:event_btnSaveProfileActionPerformed
 
     /**
@@ -1060,82 +1063,84 @@ public class ParentPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtTemperatureActionPerformed
 
     private void btnSaveVitalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveVitalsActionPerformed
-        int selectedRowIndex = tblDashboard.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel) tblDashboard.getModel();
-        Person selectedPerson = (Person) model.getValueAt(selectedRowIndex, 0);
+        if (addVitalsValidations()) {
+            int selectedRowIndex = tblDashboard.getSelectedRow();
+            DefaultTableModel model = (DefaultTableModel) tblDashboard.getModel();
+            Person selectedPerson = (Person) model.getValueAt(selectedRowIndex, 0);
 
-        // map the vital signs attributes
-        VitalSigns vitalSigns = new VitalSigns(selectedPerson.getId(), selectedPerson.getFirstName(), selectedPerson.getLastName());
-        vitalSigns.setTemperature(Integer.parseInt(txtTemperature.getText()));
-        vitalSigns.setBloodPressure(Integer.parseInt(txtPressure.getText()));
-        vitalSigns.setPulse(Integer.parseInt(txtPulse.getText()));
-        selectedPerson.updateAsAPatient(selectedPerson.getId(), people);
-        Calendar calendar = Calendar.getInstance();
-        vitalSigns.setDate(calendar.getTime());
+            // map the vital signs attributes
+            VitalSigns vitalSigns = new VitalSigns(selectedPerson.getId(), selectedPerson.getFirstName(), selectedPerson.getLastName());
+            vitalSigns.setTemperature(Integer.parseInt(txtTemperature.getText()));
+            vitalSigns.setBloodPressure(Integer.parseInt(txtPressure.getText()));
+            vitalSigns.setPulse(Integer.parseInt(txtPulse.getText()));
+            selectedPerson.updateAsAPatient(selectedPerson.getId(), people);
+            Calendar calendar = Calendar.getInstance();
+            vitalSigns.setDate(calendar.getTime());
 
-        // add the persons object to patients
-        Patient patient = patientDir.addPatients();
-        patient.setPerson(selectedPerson);
+            // add the persons object to patients
+            Patient patient = patientDir.addPatients();
+            patient.setPerson(selectedPerson);
 
-        // Initialize the encounter history arraylist
-        if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty() && encounterHistoryMap.get(selectedPerson.getId()) != null) {
-            encounterArrayList = encounterHistory.getEncounterHistory();
-        } else {
-            encounterArrayList = new ArrayList<>();
+            // Initialize the encounter history arraylist
+            if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty() && encounterHistoryMap.get(selectedPerson.getId()) != null) {
+                encounterArrayList = encounterHistory.getEncounterHistory();
+            } else {
+                encounterArrayList = new ArrayList<>();
+            }
+
+            // map the encounter attributes
+            Encounter encounter = new Encounter();
+            encounter.setVitalSigns(vitalSigns);
+            encounterArrayList.add(encounter);
+            encounterHistory.setEncounterHistory(encounterArrayList);
+            patient.setEncounterHistory(encounterHistory);
+
+            double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
+            int age = Integer.parseInt(patient.getPerson().getAge());
+            if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 26 && age <= 30 && latestReading > ConstantsClass.twentySixToThirty) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 31 && age <= 35 && latestReading > ConstantsClass.thirtyOneToThirtyFive) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 36 && age <= 40 && latestReading > ConstantsClass.thirtySixToFourty) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 41 && age <= 45 && latestReading > ConstantsClass.fortyOneTofortyFive) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 46 && age <= 50 && latestReading > ConstantsClass.fourtySixToFifty) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 51 && age <= 55 && latestReading > ConstantsClass.fiftyOneToFiftyFive) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 56 && age <= 60 && latestReading > ConstantsClass.fiftySixToSixty) {
+                patient.setIsAbnormal(true);
+            } else if (age >= 61 && age <= 65 && latestReading > ConstantsClass.sixtyOneToSixtyFive) {
+                patient.setIsAbnormal(true);
+            }
+
+            System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
+
+            // Initialize the encounter history HashMap
+            if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty()) {
+                encounterHistoryMap = this.encounterHistory.getEncounterHistoryMap();
+            } else {
+                encounterHistoryMap = new HashMap<>();
+            }
+
+            // Put values into the HashMap
+            encounterHistoryMap.put(selectedPerson.getId(), encounterHistory.getEncounterHistory());
+            encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
+
+            JOptionPane.showMessageDialog(this, "Vitals added for ID: " + selectedPerson.getId());
+            labelMaker();
+            txtName.setText("");
+            txtId.setText("");
+            txtTemperature.setText("");
+            txtPressure.setText("");
+            txtPulse.setText("");
+            pnlTable.setVisible(false);
+            switchPanels(ViewAllProfilePanel);
+            populateTable();
         }
-
-        // map the encounter attributes
-        Encounter encounter = new Encounter();
-        encounter.setVitalSigns(vitalSigns);
-        encounterArrayList.add(encounter);
-        encounterHistory.setEncounterHistory(encounterArrayList);
-        patient.setEncounterHistory(encounterHistory);
-
-        double latestReading = patient.getEncounterHistory().getEncounterHistory().get(patient.getEncounterHistory().getEncounterHistory().size() - 1).getVitalSigns().getBloodPressure();
-        int age = Integer.parseInt(patient.getPerson().getAge());
-        if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 26 && age <= 30 && latestReading > ConstantsClass.twentySixToThirty) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 31 && age <= 35 && latestReading > ConstantsClass.thirtyOneToThirtyFive) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 36 && age <= 40 && latestReading > ConstantsClass.thirtySixToFourty) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 41 && age <= 45 && latestReading > ConstantsClass.fortyOneTofortyFive) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 46 && age <= 50 && latestReading > ConstantsClass.fourtySixToFifty) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 51 && age <= 55 && latestReading > ConstantsClass.fiftyOneToFiftyFive) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 56 && age <= 60 && latestReading > ConstantsClass.fiftySixToSixty) {
-            patient.setIsAbnormal(true);
-        } else if (age >= 61 && age <= 65 && latestReading > ConstantsClass.sixtyOneToSixtyFive) {
-            patient.setIsAbnormal(true);
-        }
-
-        System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
-
-        // Initialize the encounter history HashMap
-        if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty()) {
-            encounterHistoryMap = this.encounterHistory.getEncounterHistoryMap();
-        } else {
-            encounterHistoryMap = new HashMap<>();
-        }
-
-        // Put values into the HashMap
-        encounterHistoryMap.put(selectedPerson.getId(), encounterHistory.getEncounterHistory());
-        encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
-
-        JOptionPane.showMessageDialog(this, "Vitals added for ID: " + selectedPerson.getId());
-        labelMaker();
-        txtName.setText("");
-        txtId.setText("");
-        txtTemperature.setText("");
-        txtPressure.setText("");
-        txtPulse.setText("");
-        pnlTable.setVisible(false);
-        switchPanels(ViewAllProfilePanel);
-        populateTable();
     }//GEN-LAST:event_btnSaveVitalsActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
@@ -1200,29 +1205,31 @@ public class ParentPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_txtIdUpdateActionPerformed
 
     private void btnSaveProfile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfile1ActionPerformed
-        Person person = new Person();
-        person.setFirstName(txtNameUpdate.getText().substring(0, txtNameUpdate.getText().indexOf(' ')));
-        person.setLastName(txtNameUpdate.getText().substring(txtNameUpdate.getText().indexOf(' '), txtNameUpdate.getText().length()));
-        person.setAge(txtAgeUpdate.getText());
-        person.setCity(txtCityUpdate.getText());
-        person.setCommunity(txtCommunityUpdate.getText());
-        person.setResidence(txtHouseNumUpdate.getText());
-        person.setId(id);
+        if (updateProfileValidations()) {
+            Person person = new Person();
+            person.setFirstName(txtNameUpdate.getText().substring(0, txtNameUpdate.getText().indexOf(' ')));
+            person.setLastName(txtNameUpdate.getText().substring(txtNameUpdate.getText().indexOf(' '), txtNameUpdate.getText().length()));
+            person.setAge(txtAgeUpdate.getText());
+            person.setCity(txtCityUpdate.getText());
+            person.setCommunity(txtCommunityUpdate.getText());
+            person.setResidence(txtHouseNumUpdate.getText());
+            person.setId(id);
 
-        if (encounterHistoryMap != null && encounterHistoryMap.get(id) != null) {
-            person.setIsPatient(true);
+            if (encounterHistoryMap != null && encounterHistoryMap.get(id) != null) {
+                person.setIsPatient(true);
+            }
+
+            Person personToBeUpdated = people.getPeople().stream().filter(x -> x.getId() == id).findAny().orElse(null);
+            int indexOfPersonToBeUpdated = people.getPeople().indexOf(personToBeUpdated);
+            people.getPeople().set(indexOfPersonToBeUpdated, person);
+            JOptionPane.showMessageDialog(this, "Profile update for ID: " + id);
+            txtNameUpdate.setText("");
+            txtAgeUpdate.setText("");
+            txtCityUpdate.setText("");
+            txtCommunityUpdate.setText("");
+            switchPanels(ViewAllProfilePanel);
+            populateTable();
         }
-
-        Person personToBeUpdated = people.getPeople().stream().filter(x -> x.getId() == id).findAny().orElse(null);
-        int indexOfPersonToBeUpdated = people.getPeople().indexOf(personToBeUpdated);
-        people.getPeople().set(indexOfPersonToBeUpdated, person);
-        JOptionPane.showMessageDialog(this, "Profile update for ID: " + id);
-        txtNameUpdate.setText("");
-        txtAgeUpdate.setText("");
-        txtCityUpdate.setText("");
-        txtCommunityUpdate.setText("");
-        switchPanels(ViewAllProfilePanel);
-        populateTable();
     }//GEN-LAST:event_btnSaveProfile1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -1488,7 +1495,7 @@ public class ParentPanel extends javax.swing.JPanel {
     }
 
     private Community refreshCommunities(Community communityObject) {
-        
+
         String key = "";
 
         for (Map.Entry<String, ArrayList<House>> itr : communityObject.getCommunityMap().entrySet()) {
@@ -1522,12 +1529,100 @@ public class ParentPanel extends javax.swing.JPanel {
             lblPatients.setText("Total patients: " + patientDir.getPatientList().size());
             lblPatients.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
+            float patientSize = patientDir.getPatientList().size();
+            float profileSize = people.getPeople().size();
             double percent = 0;
             if (people.getPeople().size() != 0) {
-                percent = (patientDir.getPatientList().size() / people.getPeople().size()) * 100;
+                percent = (patientSize / profileSize) * 100;
             }
             lblPercentage.setText("Percentage of Patients: " + String.valueOf(percent) + "%");
             lblPercentage.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        }
+    }
+
+    /**
+     * Create Profile validations
+     *
+     * @return
+     */
+    private boolean validations() {
+        boolean validData = true;
+
+        if (txtFirstName == null || txtFirstName.getText().isBlank() || txtFirstName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the First Name.");
+            validData = false;
+            return validData;
+        } else if (txtLastName == null || txtLastName.getText().isBlank() || txtLastName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Last Name.");
+            validData = false;
+            return validData;
+        } else if (txtAge.getText().isBlank() || txtAge.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Age.");
+            validData = false;
+            return validData;
+        } else if (txtHouseNum.getText().isBlank() || txtHouseNum.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the House Number.");
+            validData = false;
+            return validData;
+        } else if (txtCommunity.getText().isBlank() || txtCommunity.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Community.");
+            validData = false;
+            return validData;
+        } else if (txtCity.getText().isBlank() || txtCity.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the City.");
+            validData = false;
+            return validData;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Update Profile validations
+     *
+     * @return
+     */
+    private boolean updateProfileValidations() {
+        boolean validData = true;
+
+        if (txtAge.getText().isBlank() || txtAge.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Age.");
+            validData = false;
+            return validData;
+        } else if (txtHouseNum.getText().isBlank() || txtHouseNum.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the House Number.");
+            validData = false;
+            return validData;
+        } else if (txtCommunity.getText().isBlank() || txtCommunity.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Community.");
+            validData = false;
+            return validData;
+        } else if (txtCity.getText().isBlank() || txtCity.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the City.");
+            validData = false;
+            return validData;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean addVitalsValidations() {
+        boolean validData = true;
+
+        if (txtTemperature.getText().isBlank() || txtTemperature.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Temperature.");
+            validData = false;
+            return validData;
+        } else if (txtPressure.getText().isBlank() || txtPressure.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Blood Pressure.");
+            validData = false;
+            return validData;
+        } else if (txtPulse.getText().isBlank() || txtPulse.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Enter the Pulse.");
+            validData = false;
+            return validData;
+        } else {
+            return true;
         }
     }
 }
