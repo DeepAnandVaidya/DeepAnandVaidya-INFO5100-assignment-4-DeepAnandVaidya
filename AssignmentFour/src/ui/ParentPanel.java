@@ -1077,9 +1077,19 @@ public class ParentPanel extends javax.swing.JPanel {
             Calendar calendar = Calendar.getInstance();
             vitalSigns.setDate(calendar.getTime());
 
+            Patient tempPatient = null;
+            Patient patient = new Patient();
+            if (patientDir != null && patientDir.getPatientList() != null) {
+                tempPatient = patientDir.getPatientList().stream().filter(x -> x.getPerson().getId() == selectedPerson.getId()).findAny().orElse(null);
+            }
+
             // add the persons object to patients
-            Patient patient = patientDir.addPatients();
-            patient.setPerson(selectedPerson);
+            if (patientDir == null || patientDir.getPatientList() == null || !patientDir.getPatientList().contains(tempPatient)) {
+                patient = patientDir.addPatients();
+                patient.setPerson(selectedPerson);
+            } else {
+                patient = tempPatient;
+            }
 
             // Initialize the encounter history arraylist
             if (encounterHistoryMap != null && !encounterHistoryMap.isEmpty() && encounterHistoryMap.get(selectedPerson.getId()) != null) {
@@ -1099,22 +1109,24 @@ public class ParentPanel extends javax.swing.JPanel {
             int age = Integer.parseInt(patient.getPerson().getAge());
             if (age >= 21 && age <= 25 && latestReading > ConstantsClass.twentyOneToTwentyFive) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 26 && age <= 30 && latestReading > ConstantsClass.twentySixToThirty) {
+            } else if (age >= 26 && age <= 30 && (latestReading > ConstantsClass.twentySixToThirty || latestReading < ConstantsClass.twentySixToThirtyLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 31 && age <= 35 && latestReading > ConstantsClass.thirtyOneToThirtyFive) {
+            } else if (age >= 31 && age <= 35 && (latestReading > ConstantsClass.thirtyOneToThirtyFive || latestReading > ConstantsClass.thirtyOneToThirtyFiveLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 36 && age <= 40 && latestReading > ConstantsClass.thirtySixToFourty) {
+            } else if (age >= 36 && age <= 40 && (latestReading > ConstantsClass.thirtySixToFourty || latestReading > ConstantsClass.thirtySixToFourtyLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 41 && age <= 45 && latestReading > ConstantsClass.fortyOneTofortyFive) {
+            } else if (age >= 41 && age <= 45 && (latestReading > ConstantsClass.fortyOneTofortyFive || latestReading > ConstantsClass.fortyOneTofortyFiveLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 46 && age <= 50 && latestReading > ConstantsClass.fourtySixToFifty) {
+            } else if (age >= 46 && age <= 50 && (latestReading > ConstantsClass.fourtySixToFifty || latestReading > ConstantsClass.fourtySixToFiftyLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 51 && age <= 55 && latestReading > ConstantsClass.fiftyOneToFiftyFive) {
+            } else if (age >= 51 && age <= 55 && (latestReading > ConstantsClass.fiftyOneToFiftyFive || latestReading > ConstantsClass.fiftyOneToFiftyFiveLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 56 && age <= 60 && latestReading > ConstantsClass.fiftySixToSixty) {
+            } else if (age >= 56 && age <= 60 && (latestReading > ConstantsClass.fiftySixToSixty || latestReading > ConstantsClass.fiftySixToSixtyLow)) {
                 patient.setIsAbnormal(true);
-            } else if (age >= 61 && age <= 65 && latestReading > ConstantsClass.sixtyOneToSixtyFive) {
+            } else if (age >= 61 && age <= 65 && (latestReading > ConstantsClass.sixtyOneToSixtyFive || latestReading > ConstantsClass.fiftySixToSixtyLow)) {
                 patient.setIsAbnormal(true);
+            } else {
+                patient.setIsAbnormal(false);
             }
 
             System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
