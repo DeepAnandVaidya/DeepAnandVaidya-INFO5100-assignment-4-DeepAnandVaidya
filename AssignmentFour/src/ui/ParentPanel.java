@@ -79,7 +79,6 @@ public class ParentPanel extends javax.swing.JPanel {
         this.house = house;
         this.community1 = communities;
         this.city = city;
-        this.allHouses = new ArrayList<>();
         this.allCommunities = new ArrayList<>();
 
         if (city != null && city.getCommunities() != null && !city.getCommunities().isEmpty()) {
@@ -98,6 +97,9 @@ public class ParentPanel extends javax.swing.JPanel {
         JTableHeader tableHeader = tblDashboard.getTableHeader();
         tableHeader.setFont(new Font("Segoe UI", Font.BOLD, 12));
         ((DefaultTableCellRenderer) tableHeader.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
+        lblProfiles.setVisible(false);
+        lblPatients.setVisible(false);
+        lblPercentage.setVisible(false);
     }
 
     /**
@@ -122,6 +124,10 @@ public class ParentPanel extends javax.swing.JPanel {
         btnUpdateProfile = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         btnStatistics = new javax.swing.JButton();
+        lblProfiles = new javax.swing.JLabel();
+        lblPatients = new javax.swing.JLabel();
+        lblPercentage = new javax.swing.JLabel();
+        tglMetrics = new javax.swing.JToggleButton();
         CreateProfilePanel = new javax.swing.JPanel();
         lblBorder3 = new javax.swing.JLabel();
         lblBorder1 = new javax.swing.JLabel();
@@ -280,6 +286,16 @@ public class ParentPanel extends javax.swing.JPanel {
             }
         });
 
+        tglMetrics.setBackground(new java.awt.Color(255, 204, 102));
+        tglMetrics.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        tglMetrics.setForeground(new java.awt.Color(255, 102, 0));
+        tglMetrics.setText("Toggle metrics");
+        tglMetrics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tglMetricsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ViewAllProfilePanelLayout = new javax.swing.GroupLayout(ViewAllProfilePanel);
         ViewAllProfilePanel.setLayout(ViewAllProfilePanelLayout);
         ViewAllProfilePanelLayout.setHorizontalGroup(
@@ -294,7 +310,10 @@ public class ParentPanel extends javax.swing.JPanel {
                         .addGap(203, 203, 203))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
                         .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnDelete)
+                            .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
+                                .addComponent(btnDelete)
+                                .addGap(18, 18, 18)
+                                .addComponent(tglMetrics))
                             .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
                                     .addComponent(btnCreateProfile)
@@ -304,7 +323,10 @@ public class ParentPanel extends javax.swing.JPanel {
                                     .addComponent(btnAddVitals)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btnStatistics))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPatients, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(40, 40, 40))))
         );
         ViewAllProfilePanelLayout.setVerticalGroup(
@@ -322,8 +344,16 @@ public class ParentPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnDelete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 290, Short.MAX_VALUE)
+                .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDelete)
+                    .addComponent(tglMetrics))
+                .addGap(18, 18, 18)
+                .addComponent(lblProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblPatients, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
                 .addComponent(lblBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -920,6 +950,7 @@ public class ParentPanel extends javax.swing.JPanel {
      * @param evt
      */
     private void btnSaveProfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveProfileActionPerformed
+        this.allHouses = new ArrayList<>();
         Person person = people.addPeople();
         person.setFirstName(txtFirstName.getText());
         person.setLastName(txtLastName.getText());
@@ -968,6 +999,7 @@ public class ParentPanel extends javax.swing.JPanel {
         city.setCityMap(cityMap);
 
         JOptionPane.showMessageDialog(this, "Profile saved. Your ID is: " + randomCustomerId);
+        labelMaker();
         txtFirstName.setText("");
         txtLastName.setText("");
         txtAge.setText("");
@@ -1095,6 +1127,7 @@ public class ParentPanel extends javax.swing.JPanel {
         encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
 
         JOptionPane.showMessageDialog(this, "Vitals added for ID: " + selectedPerson.getId());
+        labelMaker();
         txtName.setText("");
         txtId.setText("");
         txtTemperature.setText("");
@@ -1151,12 +1184,48 @@ public class ParentPanel extends javax.swing.JPanel {
         // if the person being deleted is a patient, remove the references for that person from the encounter history
         if (selectedIndividual.isIsPatient()) {
             patientDir.getPatientList().remove(selectedIndividual);
+            patientDir.getPatientList().indexOf(selectedIndividual.getId());
             encounterHistoryMap.remove(id);
             encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
         }
 
+//        for (Map.Entry<String, ArrayList<House>> communityItr : community1.getCommunityMap().entrySet()) {
+//            if (communityItr.getKey().equals(selectedIndividual.getCommunity())) {
+//                if (communityItr.getValue().size() == 1) {
+//                    community1.getCommunityMap().remove(communityItr.getKey());
+//                }
+//            }
+//        }
+
+//        String cityKey = "";
+//        ArrayList<Community> communityList = null;
+//        for (Map.Entry<String, ArrayList<Community>> cityItr : city.getCityMap().entrySet()) {
+//
+//            // If the city matches the deleted city
+//            if (cityItr.getKey().equals(selectedIndividual.getCity())) {
+//                cityKey = cityItr.getKey();
+//                communityList = new ArrayList<>();
+//
+//                // If there is only one community in that city, delete the data from the map
+//                if (cityItr.getValue().size() == 1) {
+//                    city.getCityMap().remove(cityItr.getKey());
+//                } // Else if there are multiple communities, remove the one that is being deleted
+//                else {
+//                    for (Community community : cityItr.getValue()) {
+//                        for (Map.Entry<String, ArrayList<House>> communityItr : community.getCommunityMap().entrySet()) {
+//                            if (!communityItr.getKey().equals(selectedIndividual.getCommunity())) {
+//                                communityList.add(community);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }
+//        }
+//        city.getCityMap().put(cityKey, communityList);
         // after deleting the references, delete the actual person from person directory
         people.getPeople().remove(selectedIndividual);
+        labelMaker();
         populateTable();
     }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -1201,19 +1270,14 @@ public class ParentPanel extends javax.swing.JPanel {
     private void btnStatisticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatisticsActionPerformed
         switchPanels(StatisticsPanel);
         DefaultCategoryDataset dcd = new DefaultCategoryDataset();
-//        dcd.setValue(78.80, "Marks", "Ganesh");
-//        dcd.setValue(68.80, "Marks", "Dinesh");
-//        dcd.setValue(88.80, "Marks", "John");
-//        dcd.setValue(98.80, "Marks", "Alisha");
-//        dcd.setValue(58.80, "Marks", "Sachin");
 
-        HashMap<String, Integer> graphMap = getAbnormalPatients(community1);
+        Community communityObj = refreshCommunities(community1);
+        HashMap<String, Integer> graphMap = getAbnormalPatients(communityObj);
         for (Map.Entry<String, Integer> graphItr : graphMap.entrySet()) {
-            System.out.println(graphItr.getValue());
             dcd.setValue(graphItr.getValue(), "People with abnormal blood pressure", graphItr.getKey().toString());
         }
 
-        JFreeChart jchart = ChartFactory.createBarChart3D("Student Record", "Student Name", "Studen Marks", dcd, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart jchart = ChartFactory.createBarChart3D("", "COMMUNITIES", "PATIENTS", dcd, PlotOrientation.VERTICAL, true, true, false);
         CategoryPlot plot = jchart.getCategoryPlot();
         plot.setRangeGridlinePaint(Color.black);
 
@@ -1226,6 +1290,18 @@ public class ParentPanel extends javax.swing.JPanel {
         pnlChart.add(chartPanel);
         pnlChart.updateUI();
     }//GEN-LAST:event_btnStatisticsActionPerformed
+
+    private void tglMetricsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tglMetricsActionPerformed
+        if (tglMetrics.isSelected()) {
+            lblProfiles.setVisible(true);
+            lblPatients.setVisible(true);
+            lblPercentage.setVisible(true);
+        } else {
+            lblProfiles.setVisible(false);
+            lblPatients.setVisible(false);
+            lblPercentage.setVisible(false);
+        }
+    }//GEN-LAST:event_tglMetricsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1280,13 +1356,17 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblLastname;
     private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblNameUpdate;
+    private javax.swing.JLabel lblPatients;
+    private javax.swing.JLabel lblPercentage;
     private javax.swing.JLabel lblPressure;
+    private javax.swing.JLabel lblProfiles;
     private javax.swing.JLabel lblPulse;
     private javax.swing.JLabel lblTemperature;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlTable;
     private javax.swing.JTable tblDashboard;
     private javax.swing.JTable tblPreviousReports;
+    private javax.swing.JToggleButton tglMetrics;
     private javax.swing.JTextField txtAge;
     private javax.swing.JTextField txtAgeUpdate;
     private javax.swing.JTextField txtCity;
@@ -1430,14 +1510,57 @@ public class ParentPanel extends javax.swing.JPanel {
 
         for (Map.Entry<String, ArrayList<House>> itr : communityObject.getCommunityMap().entrySet()) {
             Integer numOfPatient = 0;
-           for(Patient patient : patientDir.getPatientList()) {
-               if(patient.isIsAbnormal() && patient.getPerson().getCommunity().equals(itr.getKey())){
-                   numOfPatient++;
-               }
-           }
+            for (Patient patient : patientDir.getPatientList()) {
+                if (patient.isIsAbnormal() && patient.getPerson().getCommunity().equals(itr.getKey())) {
+                    numOfPatient++;
+                }
+            }
             abnormalPatients.put(itr.getKey(), numOfPatient);
         }
 
         return abnormalPatients;
+    }
+
+    private Community refreshCommunities(Community communityObject) {
+        int counter = 0;
+        String key = "";
+
+        for (Map.Entry<String, ArrayList<House>> itr : communityObject.getCommunityMap().entrySet()) {
+            for (Person person : people.getPeople()) {
+                if (person.getCommunity().equals(itr.getKey())) {
+                    counter++;
+                }
+            }
+
+            if (counter == 0) {
+                key = itr.getKey();
+            }
+        }
+        if (counter == 0) {
+            communityObject.getCommunityMap().remove(key);
+        }
+
+        return communityObject;
+    }
+
+    /**
+     *
+     * Dynamically show the profile metrics
+     *
+     */
+    private void labelMaker() {
+        if (people != null && people.getPeople() != null && patientDir != null && patientDir.getPatientList() != null) {
+            lblProfiles.setText("Total Profiles: " + people.getPeople().size());
+            lblProfiles.setFont(new Font("Segoe UI", Font.BOLD, 12));
+            lblPatients.setText("Total patients: " + patientDir.getPatientList().size());
+            lblPatients.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+            double percent = 0;
+            if (people.getPeople().size() != 0) {
+                percent = (patientDir.getPatientList().size() / people.getPeople().size()) * 100;
+            }
+            lblPercentage.setText("Percentage of Patients: " + String.valueOf(percent) + "%");
+            lblPercentage.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        }
     }
 }
