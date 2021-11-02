@@ -93,13 +93,25 @@ public class ParentPanel extends javax.swing.JPanel {
             populateTable();
         }
 
+        if (this.patientDir == null || this.patientDir.getPatientList() == null || this.patientDir.getPatientList().isEmpty()) {
+            btnAbnormalities.setVisible(false);
+        }
+
         // Style the JTable header
         JTableHeader tableHeader = tblDashboard.getTableHeader();
         tableHeader.setFont(new Font("Segoe UI", Font.BOLD, 12));
         ((DefaultTableCellRenderer) tableHeader.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
+
+        JTableHeader tableHeader1 = tblAbnormalities.getTableHeader();
+        tableHeader1.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        ((DefaultTableCellRenderer) tableHeader1.getDefaultRenderer()).setHorizontalAlignment(JLabel.CENTER);
         lblProfiles.setVisible(false);
         lblPatients.setVisible(false);
         lblPercentage.setVisible(false);
+        pnlTblAbnormalities.setVisible(false);
+        lblFilter.setVisible(false);
+        drpFilter.setVisible(false);
+        btnFilterSubmit.setVisible(false);
         labelMaker();
     }
 
@@ -129,6 +141,13 @@ public class ParentPanel extends javax.swing.JPanel {
         lblPatients = new javax.swing.JLabel();
         lblPercentage = new javax.swing.JLabel();
         tglMetrics = new javax.swing.JToggleButton();
+        btnAbnormalities = new javax.swing.JButton();
+        pnlTblAbnormalities = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblAbnormalities = new javax.swing.JTable();
+        lblFilter = new javax.swing.JLabel();
+        drpFilter = new javax.swing.JComboBox<>();
+        btnFilterSubmit = new javax.swing.JButton();
         CreateProfilePanel = new javax.swing.JPanel();
         lblBorder3 = new javax.swing.JLabel();
         lblBorder1 = new javax.swing.JLabel();
@@ -227,6 +246,9 @@ public class ParentPanel extends javax.swing.JPanel {
         tblDashboard.setSelectionBackground(new java.awt.Color(255, 204, 204));
         tblDashboard.setSelectionForeground(new java.awt.Color(0, 0, 0));
         jScrollPane1.setViewportView(tblDashboard);
+        if (tblDashboard.getColumnModel().getColumnCount() > 0) {
+            tblDashboard.getColumnModel().getColumn(6).setHeaderValue("IS PATIENT?");
+        }
 
         btnAddVitals.setBackground(new java.awt.Color(255, 255, 255));
         btnAddVitals.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -298,38 +320,121 @@ public class ParentPanel extends javax.swing.JPanel {
             }
         });
 
+        btnAbnormalities.setBackground(new java.awt.Color(255, 102, 0));
+        btnAbnormalities.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnAbnormalities.setForeground(new java.awt.Color(255, 255, 153));
+        btnAbnormalities.setText("Abnormalities");
+        btnAbnormalities.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAbnormalities.setFocusPainted(false);
+        btnAbnormalities.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbnormalitiesActionPerformed(evt);
+            }
+        });
+
+        pnlTblAbnormalities.setBackground(new java.awt.Color(239, 232, 232));
+
+        tblAbnormalities.setBackground(new java.awt.Color(255, 255, 255));
+        tblAbnormalities.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        tblAbnormalities.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "NAME", "AGE", "HOUSE NUM.", "COMMUNITY", "CITY"
+            }
+        ));
+        tblAbnormalities.setGridColor(new java.awt.Color(255, 0, 51));
+        tblAbnormalities.setSelectionBackground(new java.awt.Color(255, 204, 204));
+        tblAbnormalities.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        jScrollPane3.setViewportView(tblAbnormalities);
+
+        javax.swing.GroupLayout pnlTblAbnormalitiesLayout = new javax.swing.GroupLayout(pnlTblAbnormalities);
+        pnlTblAbnormalities.setLayout(pnlTblAbnormalitiesLayout);
+        pnlTblAbnormalitiesLayout.setHorizontalGroup(
+            pnlTblAbnormalitiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTblAbnormalitiesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
+        );
+        pnlTblAbnormalitiesLayout.setVerticalGroup(
+            pnlTblAbnormalitiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTblAbnormalitiesLayout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        lblFilter.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblFilter.setForeground(new java.awt.Color(0, 0, 0));
+        lblFilter.setText("Filter by Community : ");
+
+        drpFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Allston", "Back Bay", "Bay Village", "Beacon Hill", "Brighton", "Charlestown" }));
+        drpFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                drpFilterActionPerformed(evt);
+            }
+        });
+
+        btnFilterSubmit.setBackground(new java.awt.Color(204, 255, 204));
+        btnFilterSubmit.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnFilterSubmit.setForeground(new java.awt.Color(0, 153, 51));
+        btnFilterSubmit.setText("Submit");
+        btnFilterSubmit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnFilterSubmit.setFocusPainted(false);
+        btnFilterSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFilterSubmitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout ViewAllProfilePanelLayout = new javax.swing.GroupLayout(ViewAllProfilePanel);
         ViewAllProfilePanel.setLayout(ViewAllProfilePanelLayout);
         ViewAllProfilePanelLayout.setHorizontalGroup(
             ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblBorder4, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
-            .addComponent(lblBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+            .addComponent(lblBorder4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lblBorder2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(44, Short.MAX_VALUE)
                 .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
-                        .addComponent(lblHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(203, 203, 203))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
                         .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
-                                .addComponent(btnDelete)
-                                .addGap(18, 18, 18)
-                                .addComponent(tglMetrics))
-                            .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(pnlTblAbnormalities, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
+                                    .addComponent(lblHeader1, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(163, 163, 163))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
+                                        .addComponent(btnCreateProfile)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnUpdateProfile)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnAddVitals)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnAbnormalities)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnStatistics))
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(ViewAllProfilePanelLayout.createSequentialGroup()
-                                    .addComponent(btnCreateProfile)
+                                    .addComponent(btnDelete)
                                     .addGap(18, 18, 18)
-                                    .addComponent(btnUpdateProfile)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnAddVitals)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnStatistics))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 620, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tglMetrics)
+                                    .addGap(383, 383, 383)))
                             .addComponent(lblProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPatients, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(40, 40, 40))))
+                        .addGap(28, 28, 28))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ViewAllProfilePanelLayout.createSequentialGroup()
+                        .addComponent(lblFilter)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(drpFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnFilterSubmit)
+                        .addGap(58, 58, 58))))
         );
         ViewAllProfilePanelLayout.setVerticalGroup(
             ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,20 +447,28 @@ public class ParentPanel extends javax.swing.JPanel {
                     .addComponent(btnAddVitals)
                     .addComponent(btnCreateProfile)
                     .addComponent(btnUpdateProfile)
-                    .addComponent(btnStatistics))
+                    .addComponent(btnStatistics)
+                    .addComponent(btnAbnormalities))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnDelete)
                     .addComponent(tglMetrics))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(lblProfiles, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblPatients, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblPercentage, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 191, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addGroup(ViewAllProfilePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblFilter)
+                    .addComponent(drpFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnFilterSubmit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlTblAbnormalities, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblBorder2, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -504,7 +617,7 @@ public class ParentPanel extends javax.swing.JPanel {
                     .addComponent(txtCity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(41, 41, 41)
                 .addComponent(btnSaveProfile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
                 .addComponent(lblBorder1, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -708,7 +821,7 @@ public class ParentPanel extends javax.swing.JPanel {
                 .addComponent(btnSaveVitals)
                 .addGap(33, 33, 33)
                 .addComponent(pnlTable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addComponent(lblBorder8, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -858,7 +971,7 @@ public class ParentPanel extends javax.swing.JPanel {
                     .addComponent(txtCityUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(61, 61, 61)
                 .addComponent(btnSaveProfile1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 134, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                 .addComponent(lblBorder6, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -941,7 +1054,7 @@ public class ParentPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLayeredPane1)
+            .addComponent(jLayeredPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1127,6 +1240,7 @@ public class ParentPanel extends javax.swing.JPanel {
             encounterHistory.setEncounterHistoryMap(encounterHistoryMap);
 
             JOptionPane.showMessageDialog(this, "Vitals added for ID: " + selectedPerson.getId());
+            btnAbnormalities.setVisible(true);
             labelMaker();
             txtName.setText("");
             txtId.setText("");
@@ -1194,6 +1308,7 @@ public class ParentPanel extends javax.swing.JPanel {
         people.getPeople().remove(selectedIndividual);
         labelMaker();
         populateTable();
+        populatePatientTable(null);
     }//GEN-LAST:event_btnDeleteActionPerformed
 
     private void txtIdUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdUpdateActionPerformed
@@ -1218,12 +1333,12 @@ public class ParentPanel extends javax.swing.JPanel {
             Person personToBeUpdated = people.getPeople().stream().filter(x -> x.getId() == id).findAny().orElse(null);
             int indexOfPersonToBeUpdated = people.getPeople().indexOf(personToBeUpdated);
             people.getPeople().set(indexOfPersonToBeUpdated, person);
-            
+
             Patient patient = patientDir.getPatientList().stream().filter(x -> x.getPerson().getId() == id).findAny().orElse(null);
             patient.setPerson(person);
             int indexOfPatientToBeUpdated = patientDir.getPatientList().indexOf(patient);
             patientDir.getPatientList().set(indexOfPatientToBeUpdated, patient);
-            
+
             JOptionPane.showMessageDialog(this, "Profile update for ID: " + id);
             bloodPressureEvaluator(id);
             txtNameUpdate.setText("");
@@ -1279,6 +1394,22 @@ public class ParentPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tglMetricsActionPerformed
 
+    private void btnAbnormalitiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbnormalitiesActionPerformed
+        pnlTblAbnormalities.setVisible(true);
+        lblFilter.setVisible(true);
+        drpFilter.setVisible(true);
+        btnFilterSubmit.setVisible(true);
+        populatePatientTable(null);
+    }//GEN-LAST:event_btnAbnormalitiesActionPerformed
+
+    private void btnFilterSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterSubmitActionPerformed
+        populatePatientTable(drpFilter.getSelectedItem().toString());
+    }//GEN-LAST:event_btnFilterSubmitActionPerformed
+
+    private void drpFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_drpFilterActionPerformed
+        
+    }//GEN-LAST:event_drpFilterActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel AddVitalsPanel;
@@ -1286,15 +1417,18 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JPanel StatisticsPanel;
     private javax.swing.JPanel UpdateProfilePanel;
     private javax.swing.JPanel ViewAllProfilePanel;
+    private javax.swing.JButton btnAbnormalities;
     private javax.swing.JButton btnAddVitals;
     private javax.swing.JButton btnCreateProfile;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnFilterSubmit;
     private javax.swing.JButton btnPreviousReports;
     private javax.swing.JButton btnSaveProfile;
     private javax.swing.JButton btnSaveProfile1;
     private javax.swing.JButton btnSaveVitals;
     private javax.swing.JButton btnStatistics;
     private javax.swing.JButton btnUpdateProfile;
+    private javax.swing.JComboBox<String> drpFilter;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
@@ -1303,6 +1437,7 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JLabel lblAge;
     private javax.swing.JLabel lblAgeUpdate;
@@ -1320,6 +1455,7 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblCityUpdate;
     private javax.swing.JLabel lblCommunity;
     private javax.swing.JLabel lblCommunityUpdate;
+    private javax.swing.JLabel lblFilter;
     private javax.swing.JLabel lblFirstName;
     private javax.swing.JLabel lblHeader;
     private javax.swing.JLabel lblHeader1;
@@ -1341,6 +1477,8 @@ public class ParentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTemperature;
     private javax.swing.JPanel pnlChart;
     private javax.swing.JPanel pnlTable;
+    private javax.swing.JPanel pnlTblAbnormalities;
+    private javax.swing.JTable tblAbnormalities;
     private javax.swing.JTable tblDashboard;
     private javax.swing.JTable tblPreviousReports;
     private javax.swing.JToggleButton tglMetrics;
@@ -1388,6 +1526,25 @@ public class ParentPanel extends javax.swing.JPanel {
             model.addRow(row);
         }
         Patient patient = new Patient();
+    }
+
+    private void populatePatientTable(String filter) {
+        DefaultTableModel model = (DefaultTableModel) tblAbnormalities.getModel();
+        model.setRowCount(0);
+
+        for (Patient patient : patientDir.getPatientList()) {
+            if (patient.isIsAbnormal() && patient.getPerson().getCommunity().equals(filter)) {
+                Object[] row = new Object[6];
+                row[0] = patient.getPerson().getId();
+                row[1] = patient.getPerson().getFirstName() + ' ' + patient.getPerson().getLastName();
+                row[2] = patient.getPerson().getAge();
+                row[3] = patient.getPerson().getResidence();
+                row[4] = patient.getPerson().getCommunity();
+                row[5] = patient.getPerson().getCity();
+
+                model.addRow(row);
+            }
+        }
     }
 
     // Return Person Directory list
@@ -1530,7 +1687,7 @@ public class ParentPanel extends javax.swing.JPanel {
         if (people != null && people.getPeople() != null && patientDir != null && patientDir.getPatientList() != null) {
             lblProfiles.setText("Total Profiles: " + people.getPeople().size());
             lblProfiles.setFont(new Font("Segoe UI", Font.BOLD, 12));
-            lblPatients.setText("Total patients: " + patientDir.getPatientList().size());
+            lblPatients.setText("Total Patients: " + patientDir.getPatientList().size());
             lblPatients.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
             float patientSize = patientDir.getPatientList().size();
@@ -1658,4 +1815,5 @@ public class ParentPanel extends javax.swing.JPanel {
 
         System.out.println("Patient" + patient.getPerson().getFirstName() + "has isAbnormal = " + patient.isIsAbnormal());
     }
+
 }
