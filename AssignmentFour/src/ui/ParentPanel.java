@@ -874,8 +874,10 @@ public class ParentPanel extends javax.swing.JPanel {
 
         txtHouseNumUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
+        txtCommunityUpdate.setEditable(false);
         txtCommunityUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
+        txtCityUpdate.setEditable(false);
         txtCityUpdate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
 
         btnSaveProfile1.setBackground(new java.awt.Color(215, 254, 211));

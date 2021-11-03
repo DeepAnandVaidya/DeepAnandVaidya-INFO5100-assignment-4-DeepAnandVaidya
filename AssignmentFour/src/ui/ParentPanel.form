@@ -1448,6 +1448,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtCommunityUpdate">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
@@ -1455,6 +1456,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtCityUpdate">
               <Properties>
+                <Property name="editable" type="boolean" value="false"/>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
